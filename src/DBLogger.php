@@ -18,7 +18,7 @@ class DBLogger extends LogBase
     {
         parent::__construct();
         $this->setType($type);
-        $this->enable = config('logger.enable');
+        $this->enable = config('dblogger.enable');
     }
 
     public function log(): Log|null

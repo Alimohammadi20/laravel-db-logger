@@ -54,12 +54,12 @@
                             @endswitch
                         </td>
                         <td>
-                            <small>{{Str::limit($log->message,config('logger.show_message_limit'),'...')}}</small>
+                            <small>{{Str::limit($log->message,config('dblogger.show_message_limit'),'...')}}</small>
                         </td>
                         <td>
-                            @if($log->response_time > config('logger.response_time.min') && $log->response_time < config('logger.response_time.max'))
+                            @if($log->response_time > config('dblogger.response_time.min') && $log->response_time < config('dblogger.response_time.max'))
                                 <h5>s <span class="badge bg-warning">{{$log->response_time}}</span></h5>
-                            @elseif( $log->response_time >= config('logger.response_time.max'))
+                            @elseif( $log->response_time >= config('dblogger.response_time.max'))
                                 <h5>s <span class="badge bg-danger">{{$log->response_time}}</span></h5>
                             @else
                                 <h5>s <span class="badge bg-success">{{$log->response_time}}</span></h5>

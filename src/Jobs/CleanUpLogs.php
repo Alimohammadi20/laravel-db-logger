@@ -20,7 +20,7 @@ class CleanUpLogs implements ShouldQueue
      */
     public function handle()
     {
-        $date = now()->subDays(config('logger.expire'));
+        $date = now()->subDays(config('dblogger.expire'));
         Log::whereDate('created_at', '<', $date)->delete();
     }
 }
