@@ -4,7 +4,7 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Alimi7372\\Logger\\": "src/"
+            "Alimi7372\\DBLogger\\": "src/"
         }
     },
     "authors": [
