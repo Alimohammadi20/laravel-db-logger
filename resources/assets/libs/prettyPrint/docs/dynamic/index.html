@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- - - - - - - - - - -->
+<!-- Pretty Print JSON -->
+<!-- - - - - - - - - - -->
+<html lang=en>
+<head>
+   <meta charset=utf-8>
+   <meta name=viewport    content="width=device-width, initial-scale=1, maximum-scale=1">
+   <meta name=robots      content="index, follow">
+   <meta name=description content="Example of ES module dynamic loading of pretty-print-json">
+   <title>Pretty-Print JSON &bull; ES Module Dynamic Loading</title>
+   <link rel=icon       href=https://centerkey.com/graphics/bookmark.png>
+   <link rel=preconnect href=https://fonts.googleapis.com>
+   <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+   <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4/css/all.min.css>
+   <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@2.0/dist/css/pretty-print-json.css>
+   <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/dna-engine@3.0/dist/dna-engine.css>
+   <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/web-ignition@2.0/dist/reset.min.css>
+   <style>
+      body {
+         max-width: 700px;
+         color: whitesmoke;
+         background-color: darkslateblue;
+         }
+      body >header >figure {
+         font-size: 3rem;
+         }
+      main >p {
+         text-align: center;
+         }
+      main >pre {
+         font-size: 0.9rem;
+         color: black;
+         background-color: white;
+         border: 5px solid silver;
+         padding: 5px 10px;
+         margin: 0px;
+         opacity: 0;
+         transition: opacity 1s;
+         }
+      main >pre.active {
+         opacity: 1;
+         }
+   </style>
+   <script defer src=https://cdn.jsdelivr.net/npm/dna-engine@3.0/dist/dna-engine.min.js></script>
+   <script defer src=https://cdn.jsdelivr.net/npm/web-ignition@2.0/dist/lib-x.min.js></script>
+   <script data-on-load=app.setup data-wait-for=libX>
+      const app = {
+         loadModule(module) {
+            const buttonClicked = new Date();
+            const url = 'https://cdn.jsdelivr.net/npm/pretty-print-json@2.0/dist/pretty-print-json.js';
+            globalThis.document.querySelector('main pre').classList.add('active');
+            const onModuleLoad = (module) => {
+               const pageLoaded =   Number(globalThis.document.body.dataset.pageLoaded);
+               const moduleLoaded = new Date();
+               const message = {
+                  message: 'ES Module Dynamic Loading',
+                  version: module.prettyPrintJson.version,
+                  times: {
+                     pageLoaded___: pageLoaded,
+                     buttonClicked: buttonClicked,
+                     moduleLoaded_: moduleLoaded,
+                     },
+                  milliseconds: {
+                     waitForClick: buttonClicked - pageLoaded,
+                     loadModule:   moduleLoaded - buttonClicked,
+                     },
+                  };
+               const html =   module.prettyPrintJson.toHtml(message);
+               const output = globalThis.document.querySelector('main output');
+               output.innerHTML = html;
+               dna.ui.fadeSlideIn(output);
+               };
+            import(url).then(onModuleLoad);
+            },
+         setup() {
+            const pageLoaded = String(new Date());
+            globalThis.document.body.dataset.pageLoaded = pageLoaded;
+            globalThis.document.querySelector('main code').textContent = pageLoaded;
+            dna.dom.onClick(app.loadModule, 'main button');
+            libX.ui.autoDisableButtons();
+            },
+         };
+   </script>
+</head>
+<body>
+
+<header>
+   <figure>🦋</figure>
+   <h1>Pretty-Print JSON</h1>
+   <h2>ES Module Dynamic Loading</h2>
+</header>
+
+<main>
+   <p>Page load:<br><code></code></p>
+   <p><button>Load Module Now</button></p>
+   <pre><output></output></pre>
+</main>
+
+<footer>
+   <div>
+      <a href=https://github.com/center-key/pretty-print-json><i data-brand=github-alt></i></a>
+   </div>
+</footer>
+
+</body>
+</html>

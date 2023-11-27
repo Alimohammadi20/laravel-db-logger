@@ -1,0 +1,28 @@
+@font-face {
+    font-family: 'iransansx';
+    src: url('../fonts/iranian-sans.woff2') format('woff2'),
+    url('../fonts/iranian-sans.woff') format('woff'),
+    url('../fonts/iranian-sans.otf') format('otf'),
+    url('../fonts/iranian-sans.eot') format('eot');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.btn, .nav-link {
+    font-family: iransansx, serif;
+}
+
+.json-string {
+    color: darkblue !important;
+    max-width: 90%;
+}
+
+td, th {
+    vertical-align: middle;
+    text-align: center !important;
+}
+
+.flatpickr-calendar {
+    background: navajowhite;
+}
