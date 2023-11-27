@@ -23,34 +23,37 @@ class DBLoggerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         parent::register();
-        $this->publishConfig();
+        $this->publishConfigs();
         if ($this->app->runningInConsole()) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
         $this->setRoute();
         $this->publishAssets();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dblogger');
+        $this->loadJobs();
+    }
+    
+    protected function publishConfigs()
+    {
+        $this->publishes([
+            __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
+        ], 'dblogger::config');
+    }
+
+    protected function loadJobs(): void
+    {
         $this->app->booted(function () {
             $schedule = app(Schedule::class);
             $schedule->job(new CleanUpLogs)->dailyAt('00:00');
         });
     }
 
-    protected function publishConfig(): void
-    {
-        $this->deleteDirectory(config_path('dblogger.php'));
-        $this->publishes([
-            __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
-        ], 'dblogger::config');
-    }
-
     protected function publishAssets(): void
     {
         $assetUrlPrefix = config('dblogger.asset_url');
-        $this->deleteDirectory(public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'));
         $this->publishes([
             __DIR__ . '/../resources/assets' => public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'),
         ], 'dblogger::public');
@@ -70,24 +73,5 @@ class DBLoggerServiceProvider extends ServiceProvider
         $routes->group(function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/dblogger.php');
         });
-    }
-
-    protected function deleteDirectory($dir): bool
-    {
-        if (!file_exists($dir)) {
-            return true;
-        }
-        if (!is_dir($dir)) {
-            return unlink($dir);
-        }
-        foreach (scandir($dir) as $item) {
-            if ($item == '.' || $item == '..') {
-                continue;
-            }
-            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
-                return false;
-            }
-        }
-        return rmdir($dir);
     }
 }
