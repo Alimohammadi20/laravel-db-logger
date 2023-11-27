@@ -1,13 +1,13 @@
-@extends('logger::master')
+@extends('dblogger::master')
 @push('head')
-    <link rel="stylesheet" href="{{asset('vendor/alimi7372/logger/libs/DataTables3/datatables.css')}}">
+    <link rel="stylesheet" href="{{asset('vendor/alimi7372/dblogger/libs/DataTables3/datatables.css')}}">
     <link rel="stylesheet"
-          href="{{asset('vendor/alimi7372/logger/libs/prettyPrint/dist/css/pretty-print-json.min.css')}}">
-    <link rel="stylesheet" href="{{asset("vendor/alimi7372/logger/libs/flatpickr/flatpickr.css")}}"/>
+          href="{{asset('vendor/alimi7372/dblogger/libs/prettyPrint/dist/css/pretty-print-json.min.css')}}">
+    <link rel="stylesheet" href="{{asset("vendor/alimi7372/dblogger/libs/flatpickr/flatpickr.css")}}"/>
 @endpush
 @section('content')
     <div class="container-fluids mt-5 px-5">
-        @include('logger::partials.filters')
+        @include('dblogger::partials.filters')
         <hr>
         <div class="row">
             <table class="table table-hover" id="inbox-table">
@@ -68,7 +68,7 @@
                         <td>
                             <button type="button" class="btn btn-info show-input" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal" data-id="{{$log->id}}"
-                                    data-url="{{route('log::show',$log->id)}}">
+                                    data-url="{{route('dblogger::show',$log->id)}}">
                                 نمایش
                             </button>
                         </td>
@@ -151,18 +151,18 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('vendor/alimi7372/logger/libs/DataTables3/datatables.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/prettyPrint/dist/pretty-print-json.min.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/moment/moment.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/jdate/jdate.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/flatpickr/flatpickr-jdate.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/flatpickr/l10n/fa-jdate.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/DataTables3/datatables.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/prettyPrint/dist/pretty-print-json.min.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/moment/moment.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/jdate/jdate.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/flatpickr/flatpickr-jdate.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/flatpickr/l10n/fa-jdate.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
     <script
-            src="{{asset('vendor/alimi7372/logger/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/jquery-timepicker/jquery-timepicker.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/libs/pickr/pickr.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/js/forms-pickers.js')}}"></script>
-    <script src="{{asset('vendor/alimi7372/logger/js/index.js')}}"></script>
+            src="{{asset('vendor/alimi7372/dblogger/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/jquery-timepicker/jquery-timepicker.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/libs/pickr/pickr.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/js/forms-pickers.js')}}"></script>
+    <script src="{{asset('vendor/alimi7372/dblogger/js/index.js')}}"></script>
 
 @endpush

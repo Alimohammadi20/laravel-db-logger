@@ -27,33 +27,32 @@ class DBLoggerServiceProvider extends ServiceProvider
     {
         parent::register();
         $this->publishes([
-            __DIR__ . '/../config/logger.php' => config_path('logger.php'),
-        ],'logger');
+            __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
+        ],'dblogger');
         if ($this->app->runningInConsole()) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
-        $this->loadAssets();
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'logger');
         $this->setRoute();
+        $this->loadAssets();
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dblogger');
         $this->app->booted(function () {
             $schedule = app(Schedule::class);
             $schedule->job(new CleanUpLogs)->dailyAt('00:00');
         });
-
     }
 
     protected function loadAssets()
     {
-        $assetUrlPrefix = config('logger.asset_url');
+        $assetUrlPrefix = config('dblogger.asset_url');
         $this->publishes([
-            __DIR__ . '/../resources/assets' => public_path($assetUrlPrefix . '/vendor/alimi7372/logger'),
-        ], 'public');
+            __DIR__ . '/../resources/assets' => public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'),
+        ], 'dblogger');
     }
     protected function setRoute()
     {
-        $routePrefix = config('logger.prefix');
-        $routeMiddleware = config('logger.middleware');
-        $routes = $this->app['router']->as('log::');
+        $routePrefix = config('dblogger.prefix');
+        $routeMiddleware = config('dblogger.middleware');
+        $routes = $this->app['router']->as('dblogger::');
         if ($routePrefix){
             $routes->prefix($routePrefix);
         }
@@ -61,7 +60,7 @@ class DBLoggerServiceProvider extends ServiceProvider
             $routes->middleware($routeMiddleware);
         }
         $routes->group(function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/logger.php');
+            $this->loadRoutesFrom(__DIR__.'/../routes/dblogger.php');
         });
     }
 }
