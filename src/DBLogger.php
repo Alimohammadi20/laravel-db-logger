@@ -50,7 +50,7 @@ class DBLogger extends LogBase
         return $logged;
     }
 
-    public function exception($exception): Logger
+    public function exception($exception): DBLogger
     {
         switch (get_class($exception)) {
             case ConnectException::class:
@@ -67,7 +67,7 @@ class DBLogger extends LogBase
         return $this;
     }
 
-    protected function requestException(RequestException $ex): Logger
+    protected function requestException(RequestException $ex): DBLogger
     {
         $ex = $ex->getResponse();
 //        $this->setOutPut((string)$ex->getBody());
@@ -76,7 +76,7 @@ class DBLogger extends LogBase
         return $this;
     }
 
-    protected function connectionException(ConnectException $ex): Logger
+    protected function connectionException(ConnectException $ex): DBLogger
     {
         $this->setMessage($ex->getMessage());
 //        $this->setOutPut($ex->getMessage());
@@ -84,7 +84,7 @@ class DBLogger extends LogBase
         return $this;
     }
 
-    protected function defaultException(Exception $ex): Logger
+    protected function defaultException(Exception $ex): DBLogger
     {
         $this->setOutPut($ex->getMessage());
         $this->setStatusCode(500);
