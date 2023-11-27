@@ -28,7 +28,7 @@ class DBLoggerServiceProvider extends ServiceProvider
         parent::register();
         $this->publishes([
             __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
-        ],'dblogger');
+        ], 'dblogger::config');
         if ($this->app->runningInConsole()) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
@@ -46,7 +46,7 @@ class DBLoggerServiceProvider extends ServiceProvider
         $assetUrlPrefix = config('dblogger.asset_url');
         $this->publishes([
             __DIR__ . '/../resources/assets' => public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'),
-        ], 'dblogger');
+        ], 'dblogger::public');
     }
     protected function setRoute()
     {
