@@ -41,7 +41,7 @@ class DBLoggerServiceProvider extends ServiceProvider
 
     protected function publishConfig(): void
     {
-        unlink(config_path('dblogger.php'));
+        $this->deleteDirectory(config_path('dblogger.php'));
         $this->publishes([
             __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
         ], 'dblogger::config');
