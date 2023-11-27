@@ -1,5 +1,5 @@
 {
-    "name": "alimi7372/dblogger",
+    "name": "alimi7372/laravel-dblogger",
     "description": "a package for log and monitor logs from services",
     "type": "library",
     "autoload": {
