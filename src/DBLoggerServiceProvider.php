@@ -26,14 +26,12 @@ class DBLoggerServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::register();
-        $this->publishes([
-            __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
-        ], 'dblogger::config');
+        $this->publishConfig();
         if ($this->app->runningInConsole()) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
         $this->setRoute();
-        $this->loadAssets();
+        $this->publishAssets();
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dblogger');
         $this->app->booted(function () {
             $schedule = app(Schedule::class);
@@ -41,14 +39,24 @@ class DBLoggerServiceProvider extends ServiceProvider
         });
     }
 
-    protected function loadAssets()
+    protected function publishConfig(): void
+    {
+        unlink(config_path('dblogger.php'));
+        $this->publishes([
+            __DIR__ . '/../config/dblogger.php' => config_path('dblogger.php'),
+        ], 'dblogger::config');
+    }
+
+    protected function publishAssets(): void
     {
         $assetUrlPrefix = config('dblogger.asset_url');
+        rmdir(public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'));
         $this->publishes([
             __DIR__ . '/../resources/assets' => public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'),
         ], 'dblogger::public');
     }
-    protected function setRoute()
+
+    protected function setRoute(): void
     {
         $routePrefix = config('dblogger.prefix');
         $routeMiddleware = config('dblogger.middleware');
