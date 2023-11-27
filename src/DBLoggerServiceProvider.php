@@ -50,7 +50,7 @@ class DBLoggerServiceProvider extends ServiceProvider
     protected function publishAssets(): void
     {
         $assetUrlPrefix = config('dblogger.asset_url');
-        rmdir(public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'));
+        $this->deleteDirectory(public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'));
         $this->publishes([
             __DIR__ . '/../resources/assets' => public_path($assetUrlPrefix . '/vendor/alimi7372/dblogger'),
         ], 'dblogger::public');
@@ -70,5 +70,24 @@ class DBLoggerServiceProvider extends ServiceProvider
         $routes->group(function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/dblogger.php');
         });
+    }
+
+    protected function deleteDirectory($dir): bool
+    {
+        if (!file_exists($dir)) {
+            return true;
+        }
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+        }
+        return rmdir($dir);
     }
 }
