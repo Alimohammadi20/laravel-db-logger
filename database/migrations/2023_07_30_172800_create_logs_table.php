@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->foreignId('output_id')->nullable()->constrained('log_contexts')->onDelete('cascade');
             $table->foreignId('context_id')->nullable()->constrained('log_contexts')->onDelete('cascade');
             $table->foreignId('extra_data_id')->nullable()->constrained('log_contexts')->onDelete('cascade');
-            $table->timestamp('created_at');
+            $table->timestamps();
         });
     }
 
