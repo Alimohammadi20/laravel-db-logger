@@ -194,7 +194,7 @@ samp {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 1em;
   direction: ltr ;
-  unicode-bidi: bidi-override;
+  /*unicode-bidi: bidi-override;*/
 }
 
 pre {
