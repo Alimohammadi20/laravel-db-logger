@@ -366,5 +366,36 @@ $(document).ready(function () {
             }
         })
     });
+    $('.delete-logs').on('click', function (e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        let reference = $(this).data('reference');
+        Swal.fire({
+            title: 'آیا مطمئن هسنید؟',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'بله',
+            cancelButtonText: 'خیر'
+        }).then((result) => {
+            if (result.value === true) {
+                $.ajax({
+                    type: 'get', url: url
+                }).then(result => {
+                    if (result.status) {
+                        $('#'+reference).fadeOut();
+                    } else {
+                        Swal.fire({
+                            title: 'کاربرگرامی',
+                            icon: 'warning',
+                            text: 'در انجام این عملیات خطایی رخ داده است'
+                        })
+                    }
+                })
+            }
+        }, function () {
+            return false;
+        })
+    })
+
     initDatatable()
 });

@@ -32,10 +32,8 @@ class Log extends Model
         }
         if ($request->search) {
             $query->where(function (Builder $query) use ($request) {
-                return $query->orWhere('input', 'like', '%' . $request->search . '%')
-                    ->orWhere('output', 'like', '%' . $request->search . '%')
-                    ->orWhere('context', 'like', '%' . $request->search . '%')
-                    ->orWhere('service', 'like', '%' . $request->search . '%')
+                return $query->orWhere('message', 'like', '%' . $request->search . '%')
+                    ->orWhere('user', 'like', '%' . $request->search . '%')
                     ->orWhere('uri', 'like', '%' . $request->search . '%');
             });
         }
