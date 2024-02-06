@@ -68,6 +68,9 @@ class DBLoggerServiceProvider extends ServiceProvider
             $routes->prefix($routePrefix);
         }
         if ($routeMiddleware){
+            if (str_contains($routeMiddleware ,',')){
+                $routeMiddleware = explode(',',$routeMiddleware);
+            }
             $routes->middleware($routeMiddleware);
         }
         $routes->group(function () {
