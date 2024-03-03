@@ -63,18 +63,18 @@ class DBLoggerServiceProvider extends ServiceProvider
     {
         $routePrefix = config('dblogger.prefix');
         $routeMiddleware = config('dblogger.middleware');
+        $routeMiddleware = explode(',', $routeMiddleware);
+        $routeMiddleware[] = 'web';
         $routes = $this->app['router']->as('dblogger::');
-        if ($routePrefix){
+        if ($routePrefix) {
             $routes->prefix($routePrefix);
         }
-        if ($routeMiddleware){
-            if (str_contains($routeMiddleware ,',')){
-                $routeMiddleware = explode(',',$routeMiddleware);
-            }
-            $routes->middleware($routeMiddleware);
+        if ($routeMiddleware) {
+            $routes->middleware(array_unique($routeMiddleware));
         }
         $routes->group(function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/dblogger.php');
+            $this->loadRoutesFrom(__DIR__ . '/../routes/dblogger.php');
         });
+
     }
 }
