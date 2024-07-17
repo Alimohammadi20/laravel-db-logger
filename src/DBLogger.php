@@ -71,7 +71,8 @@ class DBLogger extends LogBase
     {
         $ex = $ex->getResponse();
 //        $this->setOutPut((string)$ex->getBody());
-        $this->setMessage((string)$ex->getBody());
+        $msg = $ex ? (string)$ex->getBody() : $ex->getMessage();
+        $this->setMessage($msg);
         $this->setStatusCode($ex->getStatusCode());
         return $this;
     }
