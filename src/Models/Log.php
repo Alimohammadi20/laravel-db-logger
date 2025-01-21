@@ -65,4 +65,15 @@ class Log extends Model
     {
         return $this->belongsTo(LogContext::class, 'extra_data_id', 'id');
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($log) {
+            $log->input()->delete();
+            $log->extraData()->delete();
+            $log->output()->delete();
+            $log->context()->delete();
+        });
+    }
 }
