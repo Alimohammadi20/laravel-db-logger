@@ -69,14 +69,18 @@ class DBLogger extends LogBase
 
     protected function requestException(RequestException $ex): DBLogger
     {
-        $ex = $ex->getResponse();
-//        $this->setOutPut((string)$ex->getBody());
-        $msg = $ex ? (string)$ex->getBody() : $ex->getMessage();
+        $exception = $ex->getResponse();
+        if ($exception){
+            $msg = $exception ? (string)$exception->getBody() : $exception->getMessage();
+            $statusCode = $exception->getStatusCode();
+        }else{
+            $msg = (string)$ex->getMessage();
+            $statusCode = 500;
+        }
         $this->setMessage($msg);
-        $this->setStatusCode($ex->getStatusCode());
+        $this->setStatusCode($statusCode);
         return $this;
     }
-
     protected function connectionException(ConnectException $ex): DBLogger
     {
         $this->setMessage($ex->getMessage());
