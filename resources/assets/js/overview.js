@@ -51,7 +51,6 @@ $(document).ready(function () {
 
             // دکمه حذف
             const deleteUrl = `${window.dblogger.deleteBaseUrl}/${jalaliDate}/destroy`;
-            const deleteUrl = `${window.dblogger.deleteBaseUrl}/${jalaliDate}/destroy`;
 
             const card = `
                 <div class="col-md-3">
@@ -68,7 +67,7 @@ $(document).ready(function () {
                                 data-target="card-${jalaliDate.replace(/\//g, '-')}">
                                 <i class="fas fa-trash"></i>
                             </button>
-                            <a href="${showUrl + '?date=' + jalaliDate.replace(/\//g, '-')}" class="btn btn-sm btn-outline-success"
+                            <a href="${window.dblogger.showUrl + '?date=' + jalaliDate.replace(/\//g, '-')}" class="btn btn-sm btn-outline-success"
                                 data-target="card-${jalaliDate.replace(/\//g, '-')}">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
