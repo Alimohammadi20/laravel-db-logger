@@ -6,7 +6,9 @@ use Alimi7372\DBLogger\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Morilog\Jalali\CalendarUtils;;
+use Morilog\Jalali\CalendarUtils;
+
+;
 
 class LogController extends Controller
 {
@@ -27,16 +29,12 @@ class LogController extends Controller
             ->orderBy('created_date', 'desc')
             ->get();
 
-        // گروه‌بندی PHP-side — بدون N+1
         $data = [];
         foreach ($rows as $row) {
-            // تبدیل میلادی به شمسی
-            $jalali = CalendarUtils::createCarbonFromFormat('Y-m-d', $row->created_date)
-                ->format('Y/m/d'); // یا هر فرمت شمسی که استفاده میکنی
-
+            $jalali = jdate($row->created_date)->format('Y-m-d');
             $data[$jalali][] = [
                 'level' => $row->level,
-                'count' => (int) $row->count,
+                'count' => (int)$row->count,
             ];
         }
 

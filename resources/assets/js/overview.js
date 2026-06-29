@@ -60,6 +60,7 @@ $(document).ready(function () {
                             <strong class="text-muted">${jalaliDate}</strong>
                             <div>${badgesHtml}</div>
                         </div>
+                        <hr>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-dark">مجموع: ${total.toLocaleString('fa-IR')}</span>
                             <button class="btn btn-sm btn-outline-danger delete-logs"
