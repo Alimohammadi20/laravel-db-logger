@@ -135,13 +135,7 @@ $(document).ready(function () {
                 type: 'GET',
                 timeout: AJAX_TIMEOUT,
                 data: function (d) {
-                    // فیلترها را به query string اضافه می‌کنیم
                     const f = getFilters();
-                    d.search_query = f.search;
-                    d.date         = f.date;
-                    d.type         = f.type;
-                    d.level        = f.level;
-                    // پارامتر اضافی DataTable را حذف می‌کنیم (serverSide=false)
                     return { search: f.search, date: f.date, type: f.type, level: f.level };
                 },
                 beforeSend: function () {
@@ -150,29 +144,24 @@ $(document).ready(function () {
                 },
                 dataSrc: function (json) {
                     hideTableLoading();
-                    // API یک آرایه برمی‌گرداند
                     return Array.isArray(json) ? json : [];
                 },
                 error: function (xhr, error, thrown) {
-                    hideTableLoading();
+                    hideTableLoading();   // ← اینجا هم باید باشه
 
                     let msg = 'خطای ناشناخته در دریافت داده‌ها';
-
                     if (error === 'timeout') {
                         msg = 'زمان انتظار به پایان رسید. سرویس پاسخ نداد (timeout).';
                     } else if (xhr.status === 0) {
-                        msg = 'اتصال به سرور برقرار نشد. اتصال اینترنت را بررسی کنید.';
+                        msg = 'اتصال به سرور برقرار نشد.';
                     } else if (xhr.status === 401 || xhr.status === 403) {
                         msg = 'دسترسی مجاز نیست (' + xhr.status + ').';
                     } else if (xhr.status === 500) {
-                        msg = 'خطای داخلی سرور (500). لاگ سرور را بررسی کنید.';
+                        msg = 'خطای داخلی سرور (500).';
                     } else if (thrown) {
                         msg = thrown;
                     }
-
                     showError(msg);
-                    // جدول را خالی نگه می‌داریم تا گیج‌کننده نباشد
-                    return [];
                 },
             },
             // ─── تبدیل داده به سطر جدول ──────────────────────────────────────

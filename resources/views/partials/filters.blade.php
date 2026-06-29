@@ -36,7 +36,7 @@
     </div>
     <div class="col-2 text-start d-flex align-items-end justify-content-evenly">
         <button type="button" id="reset-btn" class="btn btn-danger ms-2">ریست</button>
-        <button type="submit" id="submit-btn" class="btn btn-success">فیلتر</button>
+        <button type="button" id="submit-btn" class="btn btn-success">فیلتر</button>
     </div>
     {{--            <div class="col-md-3">--}}
     {{--                <label for="">type :</label>--}}
