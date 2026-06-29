@@ -371,4 +371,8 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    initDatatable();
+
 });
