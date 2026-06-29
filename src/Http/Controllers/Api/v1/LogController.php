@@ -2,6 +2,7 @@
 
 namespace Alimi7372\DBLogger\Http\Controllers\Api\v1;
 
+use Alimi7372\DBLogger\Http\Resources\IndexLogResource;
 use Alimi7372\DBLogger\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,7 +16,7 @@ class LogController extends Controller
     public function indexApi(Request $request)
     {
         $logs = Log::filter($request);
-        return response()->json($logs);
+        return IndexLogResource::collection($logs);
     }
 
     public function overviewApi()

@@ -14,8 +14,7 @@ class LogController extends Controller
 {
     public function index(Request $request)
     {
-        $logs = Log::filter($request);
-        return view('dblogger::index', compact('logs'));
+        return view('dblogger::index');
     }
 
     public function getInput($id)
