@@ -16,7 +16,7 @@ use Alimi7372\DBLogger\Http\Controllers\Api\v1\LogController;
 
 
 Route::group([
-    'prefix' => 'api',
+    'prefix' => 'api/v1',
 ], function () {
     Route::get('/', [LogController::class, 'indexApi'])->name('index.api');
     Route::get('/overview', [LogController::class, 'overviewApi'])->name('overview.api');

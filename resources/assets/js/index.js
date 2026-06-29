@@ -248,7 +248,7 @@ $(document).ready(function () {
 
     $(document).on('click', '.show-input', function () {
         const logId = $(this).data('id');
-        const url = window.dblogger.showUrl + '/' + logId;
+        const url = window.dblogger.showUrl.replace('{id}', logId);
 
         // نمایش loading، مخفی کردن content
         $('#modal-loading').show();

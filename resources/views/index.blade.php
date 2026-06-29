@@ -160,7 +160,7 @@
     <script>
         window.dblogger = {
             apiUrl: "{{ route('dblogger::index.api') }}",
-            showUrl: "{{ url(config('dblogger.prefix', 'dblogger') . '/logs/get') }}",
+            showUrl: "{{ route('dblogger::index.api').'/get/{id}/input' }}",
             msgLimit: {{ config('dblogger.show_message_limit', 80) }},
             responseTimeMin: {{ config('dblogger.response_time.min', 1) }},
             responseTimeMax: {{ config('dblogger.response_time.max', 3) }},
