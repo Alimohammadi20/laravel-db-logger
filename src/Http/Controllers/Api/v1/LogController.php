@@ -15,7 +15,7 @@ class LogController extends Controller
 {
     public function indexApi(Request $request)
     {
-        $logs = Log::filter($request);
+        $logs = Log::filter($request)->paginate($request->input('per_page', 10));
         return IndexLogResource::collection($logs);
     }
 
