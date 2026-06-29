@@ -17,7 +17,7 @@
 
         {{-- محتوا --}}
         <div id="overview-content" style="display:none;">
-            <div id="overview-container"></div>
+            <div id="overview-container row"></div>
         </div>
 
         {{-- خطا --}}
@@ -32,6 +32,7 @@
     <script>
         window.dblogger = {
             overviewApiUrl: "{{ route('dblogger::overview.api') }}",
+            showUrl: "{{route('dblogger::index')}}",
             deleteBaseUrl: "{{ url('logs') }}",
             csrfToken: "{{ csrf_token() }}"
         };

@@ -51,8 +51,10 @@ $(document).ready(function () {
 
             // دکمه حذف
             const deleteUrl = `${window.dblogger.deleteBaseUrl}/${jalaliDate}/destroy`;
+            const deleteUrl = `${window.dblogger.deleteBaseUrl}/${jalaliDate}/destroy`;
 
             const card = `
+                <div class="col-md-3">
                 <div class="card mb-2 overview-card" id="card-${jalaliDate.replace(/\//g, '-')}">
                     <div class="card-body d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div class="d-flex align-items-center gap-3">
@@ -66,9 +68,14 @@ $(document).ready(function () {
                                 data-target="card-${jalaliDate.replace(/\//g, '-')}">
                                 <i class="fas fa-trash"></i>
                             </button>
+                            <a href="${showUrl + '?date=' + jalaliDate.replace(/\//g, '-')}" class="btn btn-sm btn-outline-success"
+                                data-target="card-${jalaliDate.replace(/\//g, '-')}">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
 
             container.append(card);
         });
