@@ -1,272 +1,253 @@
-const faLang = {
-    "emptyTable": "هیچ داده‌ای در جدول وجود ندارد",
-    "info": "نمایش _START_ تا _END_ از _TOTAL_ ردیف",
-    "infoEmpty": "نمایش 0 تا 0 از 0 ردیف",
-    "infoFiltered": "(فیلتر شده از _MAX_ ردیف)",
-    "infoThousands": ",",
-    "lengthMenu": "نمایش _MENU_ ردیف",
-    "processing": "در حال پردازش...",
-    "search": "جستجو:",
-    "zeroRecords": "رکوردی با این مشخصات پیدا نشد",
-    "paginate": {
-        "next": "بعدی",
-        "previous": "قبلی",
-        "first": "ابتدا",
-        "last": "انتها"
-    },
-    "aria": {
-        "sortAscending": ": فعال سازی نمایش به صورت صعودی",
-        "sortDescending": ": فعال سازی نمایش به صورت نزولی"
-    },
-    "autoFill": {
-        "cancel": "انصراف",
-        "fill": "پر کردن همه سلول ها با ساختار سیستم",
-        "fillHorizontal": "پر کردن سلول به صورت افقی",
-        "fillVertical": "پرکردن سلول به صورت عمودی"
-    },
-    "buttons": {
-        "collection": "مجموعه",
-        "colvis": "قابلیت نمایش ستون",
-        "colvisRestore": "بازنشانی قابلیت نمایش",
-        "copy": "کپی",
-        "copySuccess": {
-            "1": "یک ردیف داخل حافظه کپی شد",
-            "_": "%ds ردیف داخل حافظه کپی شد"
-        },
-        "copyTitle": "کپی در حافظه",
-        "pageLength": {
-            "-1": "نمایش همه ردیف‌ها",
-            "_": "نمایش %d ردیف",
-            "1": "نمایش 1 ردیف"
-        },
-        "print": "چاپ",
-        "copyKeys": "برای کپی داده جدول در حافظه سیستم کلید های ctrl یا ⌘ + C را فشار دهید",
-        "csv": "فایل CSV",
-        "pdf": "فایل PDF",
-        "renameState": "تغییر نام",
-        "updateState": "به روز رسانی",
-        "excel": "فایل اکسل",
-        "createState": "ایجاد وضعیت جدول",
-        "removeAllStates": "حذف همه وضعیت ها",
-        "removeState": "حذف",
-        "savedStates": "وضعیت های ذخیره شده",
-        "stateRestore": "بازگشت به وضعیت %d"
-    },
-    "searchBuilder": {
-        "add": "افزودن شرط",
-        "button": {
-            "0": "جستجو ساز",
-            "_": "جستجوساز (%d)"
-        },
-        "clearAll": "خالی کردن همه",
-        "condition": "شرط",
-        "conditions": {
-            "date": {
-                "after": "بعد از",
-                "before": "بعد از",
-                "between": "میان",
-                "empty": "خالی",
-                "not": "نباشد",
-                "notBetween": "میان نباشد",
-                "notEmpty": "خالی نباشد",
-                "equals": "برابر باشد با"
-            },
-            "number": {
-                "between": "میان",
-                "empty": "خالی",
-                "gt": "بزرگتر از",
-                "gte": "برابر یا بزرگتر از",
-                "lt": "کمتر از",
-                "lte": "برابر یا کمتر از",
-                "not": "نباشد",
-                "notBetween": "میان نباشد",
-                "notEmpty": "خالی نباشد",
-                "equals": "برابر باشد با"
-            },
-            "string": {
-                "contains": "حاوی",
-                "empty": "خالی",
-                "endsWith": "به پایان می رسد با",
-                "not": "نباشد",
-                "notEmpty": "خالی نباشد",
-                "startsWith": "شروع  شود با",
-                "notContains": "نباشد حاوی",
-                "notEndsWith": "پایان نیابد با",
-                "notStartsWith": "شروع نشود با",
-                "equals": "برابر باشد با"
-            },
-            "array": {
-                "empty": "خالی",
-                "contains": "حاوی",
-                "not": "نباشد",
-                "notEmpty": "خالی نباشد",
-                "without": "بدون",
-                "equals": "برابر باشد با"
-            }
-        },
-        "data": "اطلاعات",
-        "logicAnd": "و",
-        "logicOr": "یا",
-        "title": {
-            "0": "جستجو ساز",
-            "_": "جستجوساز (%d)"
-        },
-        "value": "مقدار",
-        "deleteTitle": "حذف شرط فیلتر",
-        "leftTitle": "شرط بیرونی",
-        "rightTitle": "شرط فرورفتگی"
-    },
-    "select": {
-        "cells": {
-            "1": "1 سلول انتخاب شد",
-            "_": "%d سلول انتخاب شد"
-        },
-        "columns": {
-            "1": "یک ستون انتخاب شد",
-            "_": "%d ستون انتخاب شد"
-        },
-        "rows": {
-            "1": "1ردیف انتخاب شد",
-            "_": "%d  انتخاب شد"
-        }
-    },
-    "thousands": ",",
-    "searchPanes": {
-        "clearMessage": "همه را پاک کن",
-        "collapse": {
-            "0": "صفحه جستجو",
-            "_": "صفحه جستجو (٪ d)"
-        },
-        "count": "{total}",
-        "countFiltered": "{shown} ({total})",
-        "emptyPanes": "صفحه جستجو وجود ندارد",
-        "loadMessage": "در حال بارگیری صفحات جستجو ...",
-        "title": "فیلترهای فعال - %d",
-        "showMessage": "نمایش همه",
-        "collapseMessage": "بستن همه"
-    },
-    "loadingRecords": "در حال بارگذاری...",
-    "datetime": {
-        "previous": "قبلی",
-        "next": "بعدی",
-        "hours": "ساعت",
-        "minutes": "دقیقه",
-        "seconds": "ثانیه",
-        "amPm": [
-            "صبح",
-            "عصر"
-        ],
-        "months": {
-            "0": "ژانویه",
-            "1": "فوریه",
-            "10": "نوامبر",
-            "4": "می",
-            "8": "سپتامبر",
-            "11": "دسامبر",
-            "3": "آوریل",
-            "9": "اکتبر",
-            "7": "اوت",
-            "2": "مارس",
-            "5": "ژوئن",
-            "6": "ژوئیه"
-        },
-        "unknown": "-",
-        "weekdays": [
-            "یکشنبه",
-            "دوشنبه",
-            "سه‌شنبه",
-            "چهارشنبه",
-            "پنجشنبه",
-            "جمعه",
-            "شنبه"
-        ]
-    },
-    "editor": {
-        "close": "بستن",
-        "create": {
-            "button": "جدید",
-            "title": "ثبت جدید",
-            "submit": "ایجــاد"
-        },
-        "edit": {
-            "button": "ویرایش",
-            "title": "ویرایش",
-            "submit": "به روز رسانی"
-        },
-        "remove": {
-            "button": "حذف",
-            "title": "حذف",
-            "submit": "حذف",
-            "confirm": {
-                "_": "آیا از حذف %d خط اطمینان دارید؟",
-                "1": "آیا از حذف یک خط اطمینان دارید؟"
-            }
-        },
-        "multi": {
-            "restore": "واگرد",
-            "noMulti": "این ورودی را می توان به صورت جداگانه ویرایش کرد، اما نه بخشی از یک گروه",
-            "title": "مقادیر متعدد",
-            "info": "مقادیر متعدد"
-        },
-        "error": {
-            "system": "خطایی رخ داده (اطلاعات بیشتر)"
-        }
-    },
-    "decimal": ".",
-    "stateRestore": {
-        "creationModal": {
-            "button": "ایجاد",
-            "columns": {
-                "search": "جستجوی ستون",
-                "visible": "وضعیت نمایش ستون"
-            },
-            "name": "نام:",
-            "order": "مرتب سازی",
-            "paging": "صفحه بندی",
-            "search": "جستجو",
-            "select": "انتخاب",
-            "title": "ایجاد وضعیت جدید",
-            "toggleLabel": "شامل:",
-            "scroller": "موقعیت جدول (اسکرول)",
-            "searchBuilder": "صفحه جستجو"
-        },
-        "emptyError": "نام نمیتواند خالی باشد.",
-        "removeConfirm": "آیا از حذف %s مطمئنید؟",
-        "removeJoiner": "و",
-        "renameButton": "تغییر نام",
-        "renameLabel": "نام جدید برای $s :",
-        "duplicateError": "وضعیتی با این نام از پیش ذخیره شده.",
-        "emptyStates": "هیچ وضعیتی ذخیره نشده",
-        "removeError": "حذف با خطا موماجه شد",
-        "removeSubmit": "حذف وضعیت",
-        "removeTitle": "حذف وضعیت جدول",
-        "renameTitle": "تغییر نام وضعیت"
-    }
-};
+import {faLang} from './datatable-falang'
 $(document).ready(function () {
-    $('#filter-process option:eq(0)').attr('selected', 'selected');
 
+    // ─── Config ───────────────────────────────────────────────────────────────
+    const cfg = window.dblogger || {};
+    const API_URL       = cfg.apiUrl        || '/dblogger/api/logs';
+    const SHOW_BASE_URL = cfg.showUrl       || '/dblogger/logs/get';
+    const MSG_LIMIT     = cfg.msgLimit      || 80;
+    const RT_MIN        = cfg.responseTimeMin || 1;
+    const RT_MAX        = cfg.responseTimeMax || 3;
+
+    // timeout طولانی چون سرویس کنده (120 ثانیه)
+    const AJAX_TIMEOUT  = 120000;
+
+    let table = null;
+    let loadingTimer = null;
+    let loadingStartTime = null;
+
+    // ─── Helper: badge level ──────────────────────────────────────────────────
+    function levelBadge(level) {
+        const map = { 'ERROR': 'bg-danger', 'SUCCESS': 'bg-success' };
+        const cls = map[level] || 'bg-info';
+        return `<small class="badge ${cls}">${escapeHtml(level)}</small>`;
+    }
+
+    // ─── Helper: badge type ───────────────────────────────────────────────────
+    function typeBadge(type) {
+        const map = { 'PROCESS': 'bg-warning', 'SERVICE': 'bg-secondary' };
+        const cls = map[type] || 'bg-primary';
+        return `<small class="badge ${cls}">${escapeHtml(type)}</small>`;
+    }
+
+    // ─── Helper: badge response time ──────────────────────────────────────────
+    function rtBadge(rt) {
+        let cls = 'bg-success';
+        if (rt > RT_MIN && rt < RT_MAX)  cls = 'bg-warning';
+        if (rt >= RT_MAX)                cls = 'bg-danger';
+        return `<h5>s <span class="badge ${cls}">${escapeHtml(String(rt))}</span></h5>`;
+    }
+
+    // ─── Helper: truncate string ──────────────────────────────────────────────
+    function strLimit(str, limit) {
+        if (!str) return '';
+        return str.length > limit ? str.substring(0, limit) + '...' : str;
+    }
+
+    // ─── Helper: escape HTML ──────────────────────────────────────────────────
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // ─── Helper: نمایش elapsed time در loading ────────────────────────────────
+    function startLoadingTimer() {
+        loadingStartTime = Date.now();
+        clearInterval(loadingTimer);
+        loadingTimer = setInterval(function () {
+            const elapsed = Math.floor((Date.now() - loadingStartTime) / 1000);
+            $('#loading-elapsed').text(elapsed + ' ثانیه گذشت...');
+        }, 1000);
+    }
+
+    function stopLoadingTimer() {
+        clearInterval(loadingTimer);
+        loadingTimer = null;
+        $('#loading-elapsed').text('');
+    }
+
+    // ─── نمایش/پنهان کردن overlay ─────────────────────────────────────────────
+    function showTableLoading() {
+        $('#table-loading-overlay').addClass('active');
+        startLoadingTimer();
+    }
+
+    function hideTableLoading() {
+        $('#table-loading-overlay').removeClass('active');
+        stopLoadingTimer();
+    }
+
+    // ─── نمایش خطا ────────────────────────────────────────────────────────────
+    function showError(msg) {
+        $('#api-error-msg').text(msg);
+        $('#api-error-banner').show();
+    }
+
+    function hideError() {
+        $('#api-error-banner').hide();
+    }
+
+    // ─── گرفتن فیلترهای فعلی ─────────────────────────────────────────────────
+    function getFilters() {
+        return {
+            search: $('#input-search').val() || '',
+            date:   $('#input-date').val()   || '',
+            type:   $('#input-type').val()   || '',
+            level:  $('#input-level').val()  || '',
+        };
+    }
+
+    // ─── init DataTable با ajax ───────────────────────────────────────────────
     function initDatatable() {
-        $('#inbox-table').DataTable({
+        table = $('#inbox-table').DataTable({
             language: faLang,
             pageLength: 10,
-            columnDefs: [{
-                "targets": [0, 1, 2],
-                "orderable": false
-            }],
+            processing: false,   // overlay خودمان را داریم
+            serverSide: false,   // داده یکجا میاد، فیلتر/صفحه‌بندی client-side
+            deferRender: true,   // رندر lazy برای بهتر شدن performance
+            columnDefs: [
+                { targets: [0, 1, 2, 3, 4, 5, 6], orderable: false },
+            ],
+            // ─── ajax config ─────────────────────────────────────────────────
+            ajax: {
+                url: API_URL,
+                type: 'GET',
+                timeout: AJAX_TIMEOUT,
+                data: function (d) {
+                    // فیلترها را به query string اضافه می‌کنیم
+                    const f = getFilters();
+                    d.search_query = f.search;
+                    d.date         = f.date;
+                    d.type         = f.type;
+                    d.level        = f.level;
+                    // پارامتر اضافی DataTable را حذف می‌کنیم (serverSide=false)
+                    return { search: f.search, date: f.date, type: f.type, level: f.level };
+                },
+                beforeSend: function () {
+                    hideError();
+                    showTableLoading();
+                },
+                dataSrc: function (json) {
+                    hideTableLoading();
+                    // API یک آرایه برمی‌گرداند
+                    return Array.isArray(json) ? json : [];
+                },
+                error: function (xhr, error, thrown) {
+                    hideTableLoading();
+
+                    let msg = 'خطای ناشناخته در دریافت داده‌ها';
+
+                    if (error === 'timeout') {
+                        msg = 'زمان انتظار به پایان رسید. سرویس پاسخ نداد (timeout).';
+                    } else if (xhr.status === 0) {
+                        msg = 'اتصال به سرور برقرار نشد. اتصال اینترنت را بررسی کنید.';
+                    } else if (xhr.status === 401 || xhr.status === 403) {
+                        msg = 'دسترسی مجاز نیست (' + xhr.status + ').';
+                    } else if (xhr.status === 500) {
+                        msg = 'خطای داخلی سرور (500). لاگ سرور را بررسی کنید.';
+                    } else if (thrown) {
+                        msg = thrown;
+                    }
+
+                    showError(msg);
+                    // جدول را خالی نگه می‌داریم تا گیج‌کننده نباشد
+                    return [];
+                },
+            },
+            // ─── تبدیل داده به سطر جدول ──────────────────────────────────────
+            columns: [
+                {
+                    // شماره ردیف — از row index استفاده می‌کنیم
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    }
+                },
+                {
+                    data: 'created_at',
+                    render: function (data) {
+                        if (!data) return '-';
+                        try {
+                            // jdate باید در scope باشه (از libs لود شده)
+                            return jdate(data).format('HH:mm:ss - Y/m/d');
+                        } catch (e) {
+                            return data;
+                        }
+                    }
+                },
+                {
+                    data: 'level',
+                    render: function (data) {
+                        return levelBadge(data || '');
+                    }
+                },
+                {
+                    data: 'type',
+                    render: function (data) {
+                        return typeBadge(data || '');
+                    }
+                },
+                {
+                    data: 'message',
+                    render: function (data) {
+                        return `<small>${escapeHtml(strLimit(data, MSG_LIMIT))}</small>`;
+                    }
+                },
+                {
+                    data: 'response_time',
+                    render: function (data) {
+                        return rtBadge(data);
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        const detailUrl = SHOW_BASE_URL + '/' + row.id + '/input';
+                        return `<button type="button"
+                                    class="btn btn-info btn-sm show-input"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                    data-id="${row.id}"
+                                    data-url="${detailUrl}">
+                                    نمایش
+                                </button>`;
+                    }
+                },
+            ],
         });
     }
 
+    // ─── reload جدول با فیلترهای جدید ────────────────────────────────────────
+    function reloadTable() {
+        if (table) {
+            table.ajax.reload(null, false); // false = صفحه فعلی حفظ بشه
+        }
+    }
+
+    // ─── فیلتر: submit ────────────────────────────────────────────────────────
+    $(document).on('click', '#submit-btn', function (e) {
+        e.preventDefault();
+        reloadTable();
+    });
+
+    // ─── فیلتر: reset ─────────────────────────────────────────────────────────
+    $(document).on('click', '#reset-btn', function (e) {
+        e.preventDefault();
+        $('#input-search').val('');
+        $('#input-date').val('');
+        $('#input-type').prop('selectedIndex', 0);
+        $('#input-level').prop('selectedIndex', 0);
+        reloadTable();
+    });
+
+    // ─── JSON Helpers ─────────────────────────────────────────────────────────
     function IsValidJson(text) {
-        if (typeof text !== "string") {
-            return false;
-        }
-        try {
-            JSON.parse(text);
-            return true;
-        } catch (error) {
-            return false;
-        }
+        if (typeof text !== 'string') return false;
+        try { JSON.parse(text); return true; } catch (e) { return false; }
     }
 
     function prepareData(input) {
@@ -275,127 +256,113 @@ $(document).ready(function () {
             for (const key in input) {
                 for (const innerKey in input[key]) {
                     let index = 0;
-                    if (typeof input[key][innerKey] == 'object') {
+                    if (typeof input[key][innerKey] === 'object') {
                         if (Array.isArray(input[key][innerKey])) {
                             for (const innerKey2 of input[key][innerKey]) {
                                 for (const itemKey in innerKey2) {
-                                    input[key][innerKey][parseInt(index)][itemKey] = IsValidJson(input[key][innerKey][parseInt(index)][itemKey]) ? JSON.parse(input[key][innerKey][parseInt(index)][itemKey]) : input[key][innerKey][parseInt(index)][itemKey];
+                                    input[key][innerKey][index][itemKey] = IsValidJson(input[key][innerKey][index][itemKey])
+                                        ? JSON.parse(input[key][innerKey][index][itemKey])
+                                        : input[key][innerKey][index][itemKey];
                                 }
                                 index++;
                             }
                         } else {
-                            if (typeof input[key][innerKey] == 'object') {
-                                for (const innerKeyKey in input[key][innerKey]) {
-                                    input[key][innerKey][innerKeyKey] = IsValidJson(input[key][innerKey][innerKeyKey]) ? JSON.parse(input[key][innerKey][innerKeyKey]) : input[key][innerKey][innerKeyKey];
-                                }
-                            } else {
-                                for (const innerKey2 of input[key][innerKey]) {
-                                    for (const itemKey in innerKey2) {
-                                        input[key][innerKey][parseInt(index)][itemKey] = IsValidJson(input[key][innerKey][parseInt(index)][itemKey]) ? JSON.parse(input[key][innerKey][parseInt(index)][itemKey]) : input[key][innerKey][parseInt(index)][itemKey];
-                                    }
-                                }
-                                index++;
+                            for (const innerKeyKey in input[key][innerKey]) {
+                                input[key][innerKey][innerKeyKey] = IsValidJson(input[key][innerKey][innerKeyKey])
+                                    ? JSON.parse(input[key][innerKey][innerKeyKey])
+                                    : input[key][innerKey][innerKeyKey];
                             }
                         }
                     }
-                    input[key][innerKey] = IsValidJson(input[key][innerKey]) ? JSON.parse(input[key][innerKey]) : input[key][innerKey];
+                    input[key][innerKey] = IsValidJson(input[key][innerKey])
+                        ? JSON.parse(input[key][innerKey])
+                        : input[key][innerKey];
                 }
             }
         } catch (e) {}
         return input;
     }
-    $('#reset-btn').on('click', function (e) {
-        $('#input-search').val('')
-        $('#input-date').val('')
-        $("#input-type").prop("selectedIndex", 0).val();
-        $("#input-level").prop("selectedIndex", 0).val();
-        $("#submit-btn").click();
-    })
-    $('.show-input').on('click', function () {
-        let url = $(this).data('url')
-        $.ajax({
-            type: 'get',
-            async: false,
-            url: url,
-            beforeSend: function () {
-                $('#json_input').html('');
-                $('#json_output').html('');
-                $('#json_context').html('');
-                $('#json_detail').html('');
-            },
-            success: function (response) {
-                response = response.data;
-                response.output = prepareData(response.output)
-                response.input = prepareData(response.input)
-                response.context = prepareData(response.context)
-                response.extra_data = prepareData(response.extra_data)
-                if (response.output === null) {
-                    response.output = {};
-                }
-                response.output.message = prepareData(response.message);
-                if (response.input=== null){
-                    $('#input-tab').hide();
-                }else{
-                    $('#input-tab').show();
-                    $('#json_input').html(prettyPrintJson.toHtml(response.input));
-                }
-                if (response.output=== null){
-                    $('#output-tab').hide();
-                }else{
-                    $('#output-tab').show();
-                    $('#json_output').html(prettyPrintJson.toHtml(response.output));
-                }
-                if (response.context=== null){
-                    $('#context-tab').hide();
-                }else{
-                    $('#context-tab').show();
-                    $('#json_context').html(prettyPrintJson.toHtml(response.context));
-                }
-                if (response.extra_data=== null){
-                    $('#extradata-tab').hide();
-                }else{
-                    $('#extradata-tab').show();
-                    $('#json_extradata').html(prettyPrintJson.toHtml(response.extra_data));
-                }
-                delete response.input;
-                delete response.output;
-                delete response.context;
-                delete response.extra_data;
-                delete response.message;
-                $('#json_detail').html(prettyPrintJson.toHtml(response));
-            }
-        })
-    });
-    $('.delete-logs').on('click', function (e) {
-        e.preventDefault();
-        let url = $(this).attr('href');
-        let reference = $(this).data('reference');
-        Swal.fire({
-            title: 'آیا مطمئن هسنید؟',
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonText: 'بله',
-            cancelButtonText: 'خیر'
-        }).then((result) => {
-            if (result.value === true) {
-                $.ajax({
-                    type: 'get', url: url
-                }).then(result => {
-                    if (result.status) {
-                        $('#'+reference).fadeOut();
-                    } else {
-                        Swal.fire({
-                            title: 'کاربرگرامی',
-                            icon: 'warning',
-                            text: 'در انجام این عملیات خطایی رخ داده است'
-                        })
-                    }
-                })
-            }
-        }, function () {
-            return false;
-        })
-    })
 
-    initDatatable()
+    // ─── Modal: نمایش جزئیات لاگ ─────────────────────────────────────────────
+    // event delegation چون دکمه‌ها داینامیک رندر می‌شن
+    $(document).on('click', '.show-input', function () {
+        const url = $(this).data('url');
+
+        // reset تب‌ها به حالت اول
+        $('#home-tab').tab('show');
+
+        // نمایش loading داخل مودال
+        $('#modal-loading').show();
+        $('#modal-content-wrapper').hide();
+        $('#json_input, #json_output, #json_context, #json_detail, #json_extradata').html('');
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            timeout: AJAX_TIMEOUT,
+            success: function (response) {
+                $('#modal-loading').hide();
+                $('#modal-content-wrapper').show();
+
+                let data = response.data;
+
+                data.output     = prepareData(data.output);
+                data.input      = prepareData(data.input);
+                data.context    = prepareData(data.context);
+                data.extra_data = prepareData(data.extra_data);
+
+                if (data.output === null) data.output = {};
+                data.output.message = prepareData(data.message);
+
+                // input tab
+                if (data.input === null) {
+                    $('#input-tab').hide();
+                } else {
+                    $('#input-tab').show();
+                    $('#json_input').html(prettyPrintJson.toHtml(data.input));
+                }
+
+                // output tab
+                if (data.output === null) {
+                    $('#contact-tab').hide();
+                } else {
+                    $('#contact-tab').show();
+                    $('#json_output').html(prettyPrintJson.toHtml(data.output));
+                }
+
+                // context tab
+                if (data.context === null) {
+                    $('#context-tab').hide();
+                } else {
+                    $('#context-tab').show();
+                    $('#json_context').html(prettyPrintJson.toHtml(data.context));
+                }
+
+                // extra_data tab
+                if (data.extra_data === null) {
+                    $('#extradata-tab').hide();
+                } else {
+                    $('#extradata-tab').show();
+                    $('#json_extradata').html(prettyPrintJson.toHtml(data.extra_data));
+                }
+
+                // detail tab — بقیه فیلدها بعد از حذف relation‌ها
+                delete data.input;
+                delete data.output;
+                delete data.context;
+                delete data.extra_data;
+                delete data.message;
+                $('#json_detail').html(prettyPrintJson.toHtml(data));
+            },
+            error: function (xhr, error) {
+                $('#modal-loading').hide();
+                $('#modal-content-wrapper').show();
+
+                let msg = 'خطا در دریافت جزئیات لاگ.';
+                if (error === 'timeout') msg = 'زمان انتظار به پایان رسید.';
+
+                $('#json_detail').html(`<div class="alert alert-danger" style="direction:rtl">${msg}</div>`);
+            }
+        });
+    });
 });

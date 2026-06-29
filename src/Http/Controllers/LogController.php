@@ -18,12 +18,6 @@ class LogController extends Controller
         return view('dblogger::index', compact('logs'));
     }
 
-    public function indexApi(Request $request)
-    {
-        $logs = Log::all();
-        return response()->json($logs);
-    }
-
     public function getInput($id)
     {
         $log = Log::where('id', $id)->with(['input', 'output', 'context', 'extraData'])->first();

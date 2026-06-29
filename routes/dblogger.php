@@ -1,5 +1,7 @@
 <?php
 
+use Alimi7372\DBLogger\Http\Controllers\LogController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,12 +14,13 @@
 |
  */
 
-use Alimi7372\DBLogger\Http\Controllers\LogController;
-use Illuminate\Support\Facades\Route;
+Route::group([
+    'prefix' => 'logs',
+], function () {
+    Route::get('logs', [LogController::class, 'index'])->name('index');
+    Route::get('logs/get/{id}/input', [LogController::class, 'getInput'])->name('show');
+    Route::get('logs/overview', [LogController::class, 'overview'])->name('overview');
+    Route::get('logs/{date}/destroy', [LogController::class, 'destroy'])->name('destroy');
+});
 
-
-Route::get('logs', [LogController::class, 'index'])->name('index');
-Route::get('logs/get/{id}/input', [LogController::class, 'getInput'])->name('show');
-Route::get('api/logs/api', [LogController::class, 'indexApi'])->name('index.api');
-Route::get('logs/overview', [LogController::class, 'overview'])->name('overview');
-Route::get('logs/{date}/destroy', [LogController::class, 'destroy'])->name('destroy');
+require __DIR__ . '/api/v1.php';
