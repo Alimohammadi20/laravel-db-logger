@@ -199,38 +199,6 @@ $(document).ready(function () {
 
     function buildJsonViewer(data, depth) {
         depth = depth || 0;
-
-        if (data === null)      return '<span class="jv-null">null</span>';
-        if (data === undefined) return '<span class="jv-null">داده‌ای وجود ندارد</span>';
-        if (typeof data === 'boolean') return `<span class="jv-bool">${data}</span>`;
-        if (typeof data === 'number')  return `<span class="jv-num">${data}</span>`;
-        if (typeof data === 'string')  return `<span class="jv-str">"${escapeHtml(data)}"</span>`;
-
-        if (Array.isArray(data)) {
-            if (data.length === 0) return '<span class="jv-bracket">[]</span>';
-            const items = data.map((item, i) => {
-                const isLast = i === data.length - 1;
-                return `<div class="jv-item">${buildJsonViewer(item, depth + 1)}${isLast ? '' : '<span class="jv-comma">,</span>'}</div>`;
-            }).join('');
-            return `<span class="jv-toggle" onclick="jvToggle(this)">▾</span><span class="jv-bracket">[</span><div class="jv-children">${items}</div><span class="jv-bracket">]</span>`;
-        }
-
-        if (typeof data === 'object') {
-            const keys = Object.keys(data);
-            if (keys.length === 0) return '<span class="jv-bracket">{}</span>';
-            const items = keys.map((key, i) => {
-                const isLast = i === keys.length - 1;
-                return `<div class="jv-item"><span class="jv-key">"${escapeHtml(key)}"</span><span class="jv-colon">: </span>${buildJsonViewer(data[key], depth + 1)}${isLast ? '' : '<span class="jv-comma">,</span>'}</div>`;
-            }).join('');
-            return `<span class="jv-toggle" onclick="jvToggle(this)">▾</span><span class="jv-bracket">{</span><div class="jv-children">${items}</div><span class="jv-bracket">}</span>`;
-        }
-
-        return String(data);
-    }
-
-    // tabKey اختیاریه — اگه داده بشه، در tabData ذخیره می‌شه
-    function buildJsonViewer(data, depth) {
-        depth = depth || 0;
         const indent = depth * 16; // هر لول = 16px
 
         if (data === null)      return '<span class="jv-null">null</span>';
@@ -286,6 +254,37 @@ $(document).ready(function () {
         }
 
         return escapeHtml(String(data));
+    }
+
+    // tabKey اختیاریه — اگه داده بشه، در tabData ذخیره می‌شه
+    function renderJsonViewer(selector, data, tabKey) {
+        const parsed = (data === null || data === undefined) ? null : deepParseJson(data);
+        const container = $(selector);
+
+        // ذخیره برای کپی بیرونی (در صورت نیاز)
+        if (tabKey) tabData[tabKey] = parsed;
+
+        if (parsed === null) {
+            container.html('<div class="jv-toolbar"></div><span class="jv-null p-2 d-block">داده‌ای وجود ندارد</span>');
+            return;
+        }
+
+        const jsonString  = JSON.stringify(parsed, null, 2);
+        const encodedJson = encodeURIComponent(jsonString);
+
+        container.html(`
+            <div class="jv-toolbar">
+                <button class="jv-copy-btn" onclick="jvCopy(this, '${encodedJson}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    کپی JSON
+                </button>
+            </div>
+            <div class="json-viewer">${buildJsonViewer(parsed)}</div>
+        `);
     }
 
     // ─── DataTable ────────────────────────────────────────────────────────────
