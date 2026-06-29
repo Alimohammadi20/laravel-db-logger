@@ -43,7 +43,7 @@ class Log extends Model
         if ($request->type) {
             $query->where('type', $request->type);
         }
-        return $query->orderBy('id', 'desc')->get();
+        return $query->orderBy('id', 'desc');
     }
 
     public function context()
