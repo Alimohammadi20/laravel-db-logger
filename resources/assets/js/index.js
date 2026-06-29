@@ -149,7 +149,7 @@ $(document).ready(function () {
             ajax: {
                 url: API_URL,
                 type: 'GET',
-                timeout AJAX_TIMEOUT,
+                timeout: AJAX_TIMEOUT,
                 data: function (d) {
                     const f = getFilters();
                     // DataTables خودش start و length می‌فرسته
