@@ -17,7 +17,7 @@
 
         {{-- محتوا --}}
         <div id="overview-content" style="display:none;">
-            <div id="overview-container row"></div>
+            <div id="overview-container" class="row"></div>
         </div>
 
         {{-- خطا --}}
