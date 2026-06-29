@@ -3,6 +3,7 @@
 namespace Alimi7372\DBLogger\Http\Controllers\Api\v1;
 
 use Alimi7372\DBLogger\Http\Resources\IndexLogResource;
+use Alimi7372\DBLogger\Http\Resources\LogResource;
 use Alimi7372\DBLogger\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -17,6 +18,11 @@ class LogController extends Controller
     {
         $logs = Log::filter($request)->paginate($request->input('per_page', 10));
         return IndexLogResource::collection($logs);
+    }
+    public function getInput($id)
+    {
+        $log = Log::where('id', $id)->with(['input', 'output', 'context', 'extraData'])->first();
+        return new LogResource($log);
     }
 
     public function overviewApi()

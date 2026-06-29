@@ -248,32 +248,64 @@ $(document).ready(function () {
 
     $(document).on('click', '.show-input', function () {
         const logId = $(this).data('id');
-        const baseUrl = SHOW_BASE_URL + '/' + logId;
+        const url = window.dblogger.showUrl + '/' + logId;
 
-        const tabs = {
-            'input': '#input-tab',
-            'output': '#output-tab',
-            'context': '#context-tab',
-            'extra': '#extra-tab',
-            'general': '#general-tab'
-        };
+        // نمایش loading، مخفی کردن content
+        $('#modal-loading').show();
+        $('#modal-content-wrapper').hide();
+        $('#exampleModal').modal('show');
 
-        Object.keys(tabs).forEach(function (key) {
-            const url = baseUrl + '/' + key;
-            $.ajax({
-                url: url,
-                type: 'GET',
-                timeout: AJAX_TIMEOUT,
-                beforeSend: function () {
-                    $(tabs[key]).html('<div class="text-center p-3"><i class="fa fa-spinner fa-spin"></i> در حال بارگذاری...</div>');
-                },
-                success: function (data) {
-                    $(tabs[key]).html('<pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre>');
-                },
-                error: function () {
-                    $(tabs[key]).html('<div class="alert alert-danger">خطا در دریافت اطلاعات</div>');
-                }
-            });
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (response) {
+                const data = response.data ?? response;
+
+                $('#json_detail').text(formatJson({
+                    id: data.id,
+                    level: data.level,
+                    type: data.type,
+                    service: data.service,
+                    uri: data.uri,
+                    method: data.method,
+                    status_code: data.status_code,
+                    response_time: data.response_time,
+                    user: data.user,
+                    message: data.message,
+                    created_at: data.created_at,
+                }));
+
+                $('#json_input').text(formatJson(data.input));
+                $('#json_output').text(formatJson(data.output));
+                $('#json_context').text(formatJson(data.context));
+                $('#json_extradata').text(formatJson(data.extra_data));
+
+                $('#modal-loading').hide();
+                $('#modal-content-wrapper').show();
+            },
+            error: function (xhr) {
+                $('#modal-loading').hide();
+                $('#modal-content-wrapper').html(
+                    '<div class="alert alert-danger">خطا در دریافت اطلاعات: ' + (xhr.responseJSON?.message ?? 'خطای ناشناخته') + '</div>'
+                );
+                $('#modal-content-wrapper').show();
+            }
         });
     });
+
+    function formatJson(value) {
+        if (value === null || value === undefined) {
+            return 'داده‌ای وجود ندارد';
+        }
+        if (typeof value === 'string') {
+            // اگه string بود، سعی کن parse کنه
+            try {
+                return JSON.stringify(JSON.parse(value), null, 2);
+            } catch (e) {
+                return value;
+            }
+        }
+        return JSON.stringify(value, null, 2);
+    }
+
 });

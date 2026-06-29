@@ -17,12 +17,6 @@ class LogController extends Controller
         return view('dblogger::index');
     }
 
-    public function getInput($id)
-    {
-        $log = Log::where('id', $id)->with(['input', 'output', 'context', 'extraData'])->first();
-        return new LogResource($log);
-    }
-
     public function overview()
     {
 
