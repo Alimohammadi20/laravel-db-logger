@@ -33,38 +33,83 @@ const faLang = {
     "decimal": ".",
     "thousands": ","
 };
+
+// ─── توابعی که از onclick در HTML صدا زده می‌شن باید global باشن ──────────────
+
+function jvToggle(el) {
+    const children = el.parentElement.querySelector('.jv-children');
+    if (!children) return;
+    const collapsed = children.style.display === 'none';
+    children.style.display = collapsed ? '' : 'none';
+    el.textContent = collapsed ? '▾' : '▸';
+}
+
+function jvCopy(btn, encodedJson) {
+    const jsonString = decodeURIComponent(encodedJson);
+
+    function flash() {
+        const original = btn.innerHTML;
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/></svg> کپی شد!`;
+        btn.classList.add('jv-copy-btn--success');
+        setTimeout(() => {
+            btn.innerHTML = original;
+            btn.classList.remove('jv-copy-btn--success');
+        }, 2000);
+    }
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(jsonString).then(flash).catch(() => fallbackCopy(jsonString, flash));
+    } else {
+        fallbackCopy(jsonString, flash);
+    }
+}
+
+function fallbackCopy(text, callback) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (callback) callback();
+}
+
+// ─── main ──────────────────────────────────────────────────────────────────────
 $(document).ready(function () {
 
     // ─── Config ───────────────────────────────────────────────────────────────
     const cfg = window.dblogger || {};
-    const API_URL = cfg.apiUrl || '/dblogger/api/logs';
-    const SHOW_BASE_URL = cfg.showUrl || '/dblogger/logs/get';
-    const MSG_LIMIT = cfg.msgLimit || 80;
-    const RT_MIN = cfg.responseTimeMin || 1;
-    const RT_MAX = cfg.responseTimeMax || 3;
-
-    // timeout طولانی چون سرویس کنده (120 ثانیه)
+    const API_URL      = cfg.apiUrl      || '/dblogger/api/logs';
+    const SHOW_BASE_URL = cfg.showUrl    || '/dblogger/logs/get';
+    const MSG_LIMIT    = cfg.msgLimit    || 80;
+    const RT_MIN       = cfg.responseTimeMin || 1;
+    const RT_MAX       = cfg.responseTimeMax || 3;
     const AJAX_TIMEOUT = 120000;
 
     let table = null;
     let loadingTimer = null;
     let loadingStartTime = null;
 
-    // ─── Helper: badge level ──────────────────────────────────────────────────
+    // ذخیره داده هر تب برای کپی
+    const tabData = {};
+
+    // ─── Helpers ──────────────────────────────────────────────────────────────
     function levelBadge(level) {
         const map = {'ERROR': 'bg-danger', 'SUCCESS': 'bg-success'};
         const cls = map[level] || 'bg-info';
         return `<small class="badge ${cls}">${escapeHtml(level)}</small>`;
     }
 
-    // ─── Helper: badge type ───────────────────────────────────────────────────
     function typeBadge(type) {
         const map = {'PROCESS': 'bg-warning', 'SERVICE': 'bg-secondary'};
         const cls = map[type] || 'bg-primary';
         return `<small class="badge ${cls}">${escapeHtml(type)}</small>`;
     }
 
-    // ─── Helper: badge response time ──────────────────────────────────────────
     function rtBadge(rt) {
         let cls = 'bg-success';
         if (rt > RT_MIN && rt < RT_MAX) cls = 'bg-warning';
@@ -72,13 +117,11 @@ $(document).ready(function () {
         return `<h5>s <span class="badge ${cls}">${escapeHtml(String(rt))}</span></h5>`;
     }
 
-    // ─── Helper: truncate string ──────────────────────────────────────────────
     function strLimit(str, limit) {
         if (!str) return '';
         return str.length > limit ? str.substring(0, limit) + '...' : str;
     }
 
-    // ─── Helper: escape HTML ──────────────────────────────────────────────────
     function escapeHtml(str) {
         if (str == null) return '';
         return String(str)
@@ -88,7 +131,7 @@ $(document).ready(function () {
             .replace(/"/g, '&quot;');
     }
 
-    // ─── Helper: نمایش elapsed time در loading ────────────────────────────────
+    // ─── Loading timer ────────────────────────────────────────────────────────
     function startLoadingTimer() {
         loadingStartTime = Date.now();
         clearInterval(loadingTimer);
@@ -104,7 +147,6 @@ $(document).ready(function () {
         $('#loading-elapsed').text('');
     }
 
-    // ─── نمایش/پنهان کردن overlay ─────────────────────────────────────────────
     function showTableLoading() {
         $('#table-loading-overlay').addClass('active');
         startLoadingTimer();
@@ -115,7 +157,6 @@ $(document).ready(function () {
         stopLoadingTimer();
     }
 
-    // ─── نمایش خطا ────────────────────────────────────────────────────────────
     function showError(msg) {
         $('#api-error-msg').text(msg);
         $('#api-error-banner').show();
@@ -125,17 +166,100 @@ $(document).ready(function () {
         $('#api-error-banner').hide();
     }
 
-    // ─── گرفتن فیلترهای فعلی ─────────────────────────────────────────────────
     function getFilters() {
         return {
             search: $('#input-search').val() || '',
-            date: $('#input-date').val() || '',
-            type: $('#input-type').val() || '',
-            level: $('#input-level').val() || '',
+            date:   $('#input-date').val()   || '',
+            type:   $('#input-type').val()   || '',
+            level:  $('#input-level').val()  || '',
         };
     }
 
-    // ─── init DataTable با ajax ───────────────────────────────────────────────
+    // ─── JSON helpers ─────────────────────────────────────────────────────────
+    function deepParseJson(value) {
+        if (typeof value === 'string') {
+            try {
+                return deepParseJson(JSON.parse(value));
+            } catch (e) {
+                return value;
+            }
+        }
+        if (Array.isArray(value)) {
+            return value.map(item => deepParseJson(item));
+        }
+        if (value !== null && typeof value === 'object') {
+            const result = {};
+            for (const key of Object.keys(value)) {
+                result[key] = deepParseJson(value[key]);
+            }
+            return result;
+        }
+        return value;
+    }
+
+    function buildJsonViewer(data, depth) {
+        depth = depth || 0;
+
+        if (data === null)      return '<span class="jv-null">null</span>';
+        if (data === undefined) return '<span class="jv-null">داده‌ای وجود ندارد</span>';
+        if (typeof data === 'boolean') return `<span class="jv-bool">${data}</span>`;
+        if (typeof data === 'number')  return `<span class="jv-num">${data}</span>`;
+        if (typeof data === 'string')  return `<span class="jv-str">"${escapeHtml(data)}"</span>`;
+
+        if (Array.isArray(data)) {
+            if (data.length === 0) return '<span class="jv-bracket">[]</span>';
+            const items = data.map((item, i) => {
+                const isLast = i === data.length - 1;
+                return `<div class="jv-item">${buildJsonViewer(item, depth + 1)}${isLast ? '' : '<span class="jv-comma">,</span>'}</div>`;
+            }).join('');
+            return `<span class="jv-toggle" onclick="jvToggle(this)">▾</span><span class="jv-bracket">[</span><div class="jv-children">${items}</div><span class="jv-bracket">]</span>`;
+        }
+
+        if (typeof data === 'object') {
+            const keys = Object.keys(data);
+            if (keys.length === 0) return '<span class="jv-bracket">{}</span>';
+            const items = keys.map((key, i) => {
+                const isLast = i === keys.length - 1;
+                return `<div class="jv-item"><span class="jv-key">"${escapeHtml(key)}"</span><span class="jv-colon">: </span>${buildJsonViewer(data[key], depth + 1)}${isLast ? '' : '<span class="jv-comma">,</span>'}</div>`;
+            }).join('');
+            return `<span class="jv-toggle" onclick="jvToggle(this)">▾</span><span class="jv-bracket">{</span><div class="jv-children">${items}</div><span class="jv-bracket">}</span>`;
+        }
+
+        return String(data);
+    }
+
+    // tabKey اختیاریه — اگه داده بشه، در tabData ذخیره می‌شه
+    function renderJsonViewer(selector, data, tabKey) {
+        const parsed = (data === null || data === undefined) ? null : deepParseJson(data);
+        const container = $(selector);
+
+        // ذخیره برای کپی بیرونی (در صورت نیاز)
+        if (tabKey) tabData[tabKey] = parsed;
+
+        if (parsed === null) {
+            container.html('<div class="jv-toolbar"></div><span class="jv-null p-2 d-block">داده‌ای وجود ندارد</span>');
+            return;
+        }
+
+        const jsonString  = JSON.stringify(parsed, null, 2);
+        const encodedJson = encodeURIComponent(jsonString);
+
+        container.html(`
+            <div class="jv-toolbar">
+                <button class="jv-copy-btn" onclick="jvCopy(this, '${encodedJson}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    کپی JSON
+                </button>
+            </div>
+            <div class="json-viewer">${buildJsonViewer(parsed)}</div>
+        `);
+    }
+
+    // ─── DataTable ────────────────────────────────────────────────────────────
     function initDatatable() {
         table = $('#inbox-table').DataTable({
             language: faLang,
@@ -152,12 +276,12 @@ $(document).ready(function () {
                 timeout: AJAX_TIMEOUT,
                 data: function (d) {
                     const f = getFilters();
-                    d.page = Math.floor(d.start / d.length) + 1;
+                    d.page     = Math.floor(d.start / d.length) + 1;
                     d.per_page = d.length;
-                    d.search = f.search;
-                    d.date = f.date;
-                    d.type = f.type;
-                    d.level = f.level;
+                    d.search   = f.search;
+                    d.date     = f.date;
+                    d.type     = f.type;
+                    d.level    = f.level;
                 },
                 beforeSend: function () {
                     hideError();
@@ -166,7 +290,7 @@ $(document).ready(function () {
                 dataSrc: function (json) {
                     hideTableLoading();
                     if (json && json.meta) {
-                        json.recordsTotal = json.meta.total;
+                        json.recordsTotal    = json.meta.total;
                         json.recordsFiltered = json.meta.total;
                     }
                     return json.data || [];
@@ -174,15 +298,14 @@ $(document).ready(function () {
                 error: function (xhr, error, thrown) {
                     hideTableLoading();
                     let msg = 'خطای ناشناخته دریافت داده‌ها';
-                    if (error === 'timeout') msg = 'زمان انتظار به پایان رسید.';
-                    else if (xhr.status === 0) msg = 'اتصال به سرور برقرار نشد.';
+                    if (error === 'timeout')                         msg = 'زمان انتظار به پایان رسید.';
+                    else if (xhr.status === 0)                       msg = 'اتصال به سرور برقرار نشد.';
                     else if (xhr.status === 401 || xhr.status === 403) msg = 'دسترسی مجاز نیست (' + xhr.status + ').';
-                    else if (xhr.status === 500) msg = 'خطای داخلی سرور (500).';
-                    else if (thrown) msg = thrown;
+                    else if (xhr.status === 500)                     msg = 'خطای داخلی سرور (500).';
+                    else if (thrown)                                 msg = thrown;
                     showError(msg);
                 },
             },
-            // ← columns اینجا، همتراز با ajax
             columns: [
                 {
                     data: null,
@@ -194,24 +317,17 @@ $(document).ready(function () {
                     data: 'created_at',
                     render: function (data) {
                         if (!data) return '-';
-                        try {
-                            return jdate(data).format('HH:mm:ss - Y/m/d');
-                        } catch (e) {
-                            return data;
-                        }
+                        try { return jdate(data).format('HH:mm:ss - Y/m/d'); }
+                        catch (e) { return data; }
                     }
                 },
                 {
                     data: 'level',
-                    render: function (data) {
-                        return levelBadge(data || '');
-                    }
+                    render: function (data) { return levelBadge(data || ''); }
                 },
                 {
                     data: 'type',
-                    render: function (data) {
-                        return typeBadge(data || '');
-                    }
+                    render: function (data) { return typeBadge(data || ''); }
                 },
                 {
                     data: 'message',
@@ -221,64 +337,62 @@ $(document).ready(function () {
                 },
                 {
                     data: 'response_time',
-                    render: function (data) {
-                        return rtBadge(data);
-                    }
+                    render: function (data) { return rtBadge(data); }
                 },
                 {
                     data: null,
                     render: function (data, type, row) {
-                        const detailUrl = SHOW_BASE_URL + '/' + row.id + '/input';
                         return `<button type="button"
                             class="btn btn-info btn-sm show-input"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
-                            data-id="${row.id}"
-                            data-url="${detailUrl}">
+                            data-id="${row.id}">
                             نمایش
                         </button>`;
                     }
                 },
             ],
-        });  // ← بستن DataTable({})
-    }        // ← بستن initDatatable()
-
+        });
+    }
 
     initDatatable();
 
+    // ─── Modal: نمایش جزئیات ──────────────────────────────────────────────────
     $(document).on('click', '.show-input', function () {
         const logId = $(this).data('id');
-        const url = window.dblogger.showUrl.replace('{id}', logId);
+        const url   = SHOW_BASE_URL.replace('{id}', logId);
 
-        // نمایش loading، مخفی کردن content
         $('#modal-loading').show();
         $('#modal-content-wrapper').hide();
-        $('#exampleModal').modal('show');
+
+        // برگشت به تب اول
+        $('#home-tab').tab('show');
 
         $.ajax({
             url: url,
             type: 'GET',
+            timeout: AJAX_TIMEOUT,
             success: function (response) {
                 const data = response.data ?? response;
 
-                $('#json_detail').text(formatJson({
-                    id: data.id,
-                    level: data.level,
-                    type: data.type,
-                    service: data.service,
-                    uri: data.uri,
-                    method: data.method,
-                    status_code: data.status_code,
+                renderJsonViewer('#json_detail', {
+                    id:            data.id,
+                    level:         data.level,
+                    type:          data.type,
+                    service:       data.service,
+                    uri:           data.uri,
+                    method:        data.method,
+                    status_code:   data.status_code,
                     response_time: data.response_time,
-                    user: data.user,
-                    message: data.message,
-                    created_at: data.created_at,
-                }));
+                    user:          data.user,
+                    message:       data.message,
+                    created_at:    data.created_at,
+                });
 
-                $('#json_input').text(formatJson(data.input));
-                $('#json_output').text(formatJson(data.output));
-                $('#json_context').text(formatJson(data.context));
-                $('#json_extradata').text(formatJson(data.extra_data));
+                renderJsonViewer('#json_input',     data.input);
+                renderJsonViewer('#json_output',    data.output);
+                renderJsonViewer('#json_context',   data.context);
+                renderJsonViewer('#json_extradata', data.extra_data);
 
                 $('#modal-loading').hide();
                 $('#modal-content-wrapper').show();
@@ -286,26 +400,18 @@ $(document).ready(function () {
             error: function (xhr) {
                 $('#modal-loading').hide();
                 $('#modal-content-wrapper').html(
-                    '<div class="alert alert-danger">خطا در دریافت اطلاعات: ' + (xhr.responseJSON?.message ?? 'خطای ناشناخته') + '</div>'
+                    '<div class="alert alert-danger m-3">خطا در دریافت اطلاعات: ' +
+                    escapeHtml(xhr.responseJSON?.message ?? 'خطای ناشناخته') +
+                    '</div>'
                 );
                 $('#modal-content-wrapper').show();
             }
         });
     });
 
-    function formatJson(value) {
-        if (value === null || value === undefined) {
-            return 'داده‌ای وجود ندارد';
-        }
-        if (typeof value === 'string') {
-            // اگه string بود، سعی کن parse کنه
-            try {
-                return JSON.stringify(JSON.parse(value), null, 2);
-            } catch (e) {
-                return value;
-            }
-        }
-        return JSON.stringify(value, null, 2);
-    }
+    // ─── فیلترها: reload جدول ─────────────────────────────────────────────────
+    $('#input-search, #input-date, #input-type, #input-level').on('change input', function () {
+        if (table) table.ajax.reload(null, false);
+    });
 
 });

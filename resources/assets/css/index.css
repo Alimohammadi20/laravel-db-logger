@@ -30,3 +30,58 @@ td, th {
 code, kbd, pre, samp {
     unicode-bidi: unset !important;
 }
+.json-viewer {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+}
+.jv-key   { color: #7c3aed; font-weight: bold; }
+.jv-str   { color: #16a34a; }
+.jv-num   { color: #2563eb; }
+.jv-bool  { color: #d97706; }
+.jv-null  { color: #9ca3af; font-style: italic; }
+.jv-bracket { color: #374151; }
+.jv-comma { color: #374151; }
+.jv-colon { color: #374151; }
+.jv-children { margin-right: 16px; border-right: 1px dashed #e5e7eb; padding-right: 8px; }
+.jv-toggle {
+    cursor: pointer;
+    user-select: none;
+    color: #6b7280;
+    margin-left: 2px;
+    font-size: 11px;
+}
+.jv-toggle:hover { color: #111827; }
+.jv-item { margin: 1px 0; }
+.jv-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.jv-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    font-size: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.jv-copy-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.jv-copy-btn--success {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #16a34a;
+}

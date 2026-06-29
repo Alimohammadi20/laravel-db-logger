@@ -85,71 +85,74 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">جزییات</h1>
-                        <button type="button" class="btn-close ms-0" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                        <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" style="direction: ltr;" id="json_viewer">
-                        {{-- loading state مودال --}}
+                    <div class="modal-body" style="direction: ltr;">
+
+                        {{-- loading state --}}
                         <div id="modal-loading" class="text-center py-5" style="display:none;">
                             <div class="spinner-border text-secondary" role="status"></div>
                             <p class="mt-2 text-muted" style="direction:rtl">در حال بارگذاری...</p>
                         </div>
+
                         <div id="modal-content-wrapper">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                            data-bs-target="#details-tab-pane" type="button" role="tab"
-                                            aria-controls="details-tab-pane" aria-selected="true">اطلاعات کلی
+                                    <button class="nav-link active" id="home-tab"
+                                            data-bs-toggle="tab" data-bs-target="#details-tab-pane"
+                                            type="button" role="tab" aria-selected="true">
+                                        اطلاعات کلی
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="input-tab" data-bs-toggle="tab"
-                                            data-bs-target="#inputs-tab-pane" type="button" role="tab"
-                                            aria-controls="inputs-tab-pane" aria-selected="false">ورودی
+                                    <button class="nav-link" id="input-tab"
+                                            data-bs-toggle="tab" data-bs-target="#inputs-tab-pane"
+                                            type="button" role="tab" aria-selected="false">
+                                        ورودی
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                                            data-bs-target="#outputs-tab-pane" type="button" role="tab"
-                                            aria-controls="outputs-tab-pane" aria-selected="false">خروجی
+                                    <button class="nav-link" id="output-tab"
+                                            data-bs-toggle="tab" data-bs-target="#outputs-tab-pane"
+                                            type="button" role="tab" aria-selected="false">
+                                        خروجی
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="context-tab" data-bs-toggle="tab"
-                                            data-bs-target="#context-tab-pane" type="button" role="tab"
-                                            aria-controls="context-tab-pane" aria-selected="false">کانتکس
+                                    <button class="nav-link" id="context-tab"
+                                            data-bs-toggle="tab" data-bs-target="#context-tab-pane"
+                                            type="button" role="tab" aria-selected="false">
+                                        کانتکس
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="extradata-tab" data-bs-toggle="tab"
-                                            data-bs-target="#extradata-tab-pane" type="button" role="tab"
-                                            aria-controls="extradata-tab-pane" aria-selected="false">دیتاهای اضافی
+                                    <button class="nav-link" id="extradata-tab"
+                                            data-bs-toggle="tab" data-bs-target="#extradata-tab-pane"
+                                            type="button" role="tab" aria-selected="false">
+                                        دیتاهای اضافی
                                     </button>
                                 </li>
                             </ul>
+
                             <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel"
-                                     aria-labelledby="home-tab" tabindex="0">
-                                    <pre id="json_detail"></pre>
+                                <div class="tab-pane fade show active" id="details-tab-pane" role="tabpanel">
+                                    <div id="json_detail"></div>
                                 </div>
-                                <div class="tab-pane fade" id="inputs-tab-pane" role="tabpanel"
-                                     aria-labelledby="input-tab" tabindex="0">
-                                    <pre id="json_input"></pre>
+                                <div class="tab-pane fade" id="inputs-tab-pane" role="tabpanel">
+                                    <div id="json_input"></div>
                                 </div>
-                                <div class="tab-pane fade" id="outputs-tab-pane" role="tabpanel"
-                                     aria-labelledby="contact-tab" tabindex="0">
-                                    <pre id="json_output"></pre>
+                                <div class="tab-pane fade" id="outputs-tab-pane" role="tabpanel">
+                                    <div id="json_output"></div>
                                 </div>
-                                <div class="tab-pane fade" id="context-tab-pane" role="tabpanel"
-                                     aria-labelledby="context-tab" tabindex="0">
-                                    <pre id="json_context"></pre>
+                                <div class="tab-pane fade" id="context-tab-pane" role="tabpanel">
+                                    <div id="json_context"></div>
                                 </div>
-                                <div class="tab-pane fade" id="extradata-tab-pane" role="tabpanel"
-                                     aria-labelledby="extradata-tab" tabindex="0">
-                                    <pre id="json_extradata"></pre>
+                                <div class="tab-pane fade" id="extradata-tab-pane" role="tabpanel">
+                                    <div id="json_extradata"></div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
