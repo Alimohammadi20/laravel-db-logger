@@ -17,10 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'logs',
 ], function () {
-    Route::get('logs', [LogController::class, 'index'])->name('index');
-    Route::get('logs/get/{id}/input', [LogController::class, 'getInput'])->name('show');
-    Route::get('logs/overview', [LogController::class, 'overview'])->name('overview');
-    Route::get('logs/{date}/destroy', [LogController::class, 'destroy'])->name('destroy');
+    Route::get('/', [LogController::class, 'index'])->name('index');
+    Route::get('/overview', [LogController::class, 'overview'])->name('overview');
+    Route::get('/{date}/destroy', [LogController::class, 'destroy'])->name('destroy');
 });
 
 require __DIR__ . '/api/v1.php';

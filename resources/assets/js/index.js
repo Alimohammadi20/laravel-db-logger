@@ -246,4 +246,34 @@ $(document).ready(function () {
 
     initDatatable();
 
+    $(document).on('click', '.show-input', function () {
+        const logId = $(this).data('id');
+        const baseUrl = SHOW_BASE_URL + '/' + logId;
+
+        const tabs = {
+            'input': '#input-tab',
+            'output': '#output-tab',
+            'context': '#context-tab',
+            'extra': '#extra-tab',
+            'general': '#general-tab'
+        };
+
+        Object.keys(tabs).forEach(function (key) {
+            const url = baseUrl + '/' + key;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                timeout: AJAX_TIMEOUT,
+                beforeSend: function () {
+                    $(tabs[key]).html('<div class="text-center p-3"><i class="fa fa-spinner fa-spin"></i> در حال بارگذاری...</div>');
+                },
+                success: function (data) {
+                    $(tabs[key]).html('<pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">' + escapeHtml(JSON.stringify(data, null, 2)) + '</pre>');
+                },
+                error: function () {
+                    $(tabs[key]).html('<div class="alert alert-danger">خطا در دریافت اطلاعات</div>');
+                }
+            });
+        });
+    });
 });
