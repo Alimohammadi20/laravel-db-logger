@@ -10,7 +10,7 @@
         @include('dblogger::partials.filters')
         <hr>
         {{-- بنر خطا --}}
-        <div id="api-error-banner" class="alert alert-danger alert-dismissible" role="alert">
+        <div id="api-error-banner" class="alert alert-danger alert-dismissible" role="alert" style="display:none;">
             <strong>خطا در دریافت داده‌ها:</strong> <span id="api-error-msg"></span>
             <button type="button" class="btn-close" onclick="$('#api-error-banner').hide()"></button>
         </div>

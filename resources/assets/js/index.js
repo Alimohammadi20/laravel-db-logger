@@ -36,13 +36,11 @@ const faLang = {
 
 // ─── توابعی که از onclick در HTML صدا زده می‌شن باید global باشن ──────────────
 
-window.jvToggle = function(btn) {
+window.jvToggle = function (btn) {
     // ساختار: .jv-node > [toggle] [key/index] [colon] [bracket + children + bracket]
     // children مستقیم زیر همون .jv-node
-    const node     = btn.closest('.jv-node');
-    const children = Array.from(node.childNodes).find(
-        n => n.nodeType === 1 && n.classList.contains('jv-children')
-    ) || node.querySelector(':scope > .jv-children');
+    const node = btn.closest('.jv-node');
+    const children = Array.from(node.childNodes).find(n => n.nodeType === 1 && n.classList.contains('jv-children')) || node.querySelector(':scope > .jv-children');
 
     if (!children) return;
 
@@ -88,16 +86,25 @@ function fallbackCopy(text, callback) {
     if (callback) callback();
 }
 
+function showTableLoading() {
+    $('#table-loading-overlay').addClass('active');
+    startLoadingTimer();
+}
+
+function hideTableLoading() {
+    $('#table-loading-overlay').removeClass('active');
+    stopLoadingTimer();
+}
 // ─── main ──────────────────────────────────────────────────────────────────────
 $(document).ready(function () {
 
     // ─── Config ───────────────────────────────────────────────────────────────
     const cfg = window.dblogger || {};
-    const API_URL      = cfg.apiUrl      || '/dblogger/api/logs';
-    const SHOW_BASE_URL = cfg.showUrl    || '/dblogger/logs/get';
-    const MSG_LIMIT    = cfg.msgLimit    || 80;
-    const RT_MIN       = cfg.responseTimeMin || 1;
-    const RT_MAX       = cfg.responseTimeMax || 3;
+    const API_URL = cfg.apiUrl || '/dblogger/api/logs';
+    const SHOW_BASE_URL = cfg.showUrl || '/dblogger/logs/get';
+    const MSG_LIMIT = cfg.msgLimit || 80;
+    const RT_MIN = cfg.responseTimeMin || 1;
+    const RT_MAX = cfg.responseTimeMax || 3;
     const AJAX_TIMEOUT = 120000;
 
     let table = null;
@@ -179,9 +186,9 @@ $(document).ready(function () {
     function getFilters() {
         return {
             search: $('#input-search').val() || '',
-            date:   $('#input-date').val()   || '',
-            type:   $('#input-type').val()   || '',
-            level:  $('#input-level').val()  || '',
+            date: $('#input-date').val() || '',
+            type: $('#input-type').val() || '',
+            level: $('#input-level').val() || '',
         };
     }
 
@@ -210,25 +217,19 @@ $(document).ready(function () {
     function buildJsonViewer(data, depth) {
         depth = depth || 0;
 
-        if (data === null)
-            return '<span class="jv-null">null</span>';
-        if (data === undefined)
-            return '<span class="jv-null">undefined</span>';
-        if (typeof data === 'boolean')
-            return `<span class="jv-bool">${data}</span>`;
-        if (typeof data === 'number')
-            return `<span class="jv-num">${data}</span>`;
-        if (typeof data === 'string')
-            return `<span class="jv-str">"${escapeHtml(data)}"</span>`;
+        if (data === null) return '<span class="jv-null">null</span>';
+        if (data === undefined) return '<span class="jv-null">undefined</span>';
+        if (typeof data === 'boolean') return `<span class="jv-bool">${data}</span>`;
+        if (typeof data === 'number') return `<span class="jv-num">${data}</span>`;
+        if (typeof data === 'string') return `<span class="jv-str">"${escapeHtml(data)}"</span>`;
 
         if (Array.isArray(data)) {
-            if (data.length === 0)
-                return '<span class="jv-bracket">[</span><span class="jv-bracket">]</span>';
+            if (data.length === 0) return '<span class="jv-bracket">[</span><span class="jv-bracket">]</span>';
 
             const items = data.map((item, i) => {
-                const isLast    = i === data.length - 1;
+                const isLast = i === data.length - 1;
                 const isComplex = item !== null && typeof item === 'object';
-                const comma     = isLast ? '' : '<span class="jv-comma">,</span>';
+                const comma = isLast ? '' : '<span class="jv-comma">,</span>';
 
                 if (isComplex) {
                     return `
@@ -247,14 +248,13 @@ $(document).ready(function () {
 
         if (typeof data === 'object') {
             const keys = Object.keys(data);
-            if (keys.length === 0)
-                return '<span class="jv-bracket">{</span><span class="jv-bracket">}</span>';
+            if (keys.length === 0) return '<span class="jv-bracket">{</span><span class="jv-bracket">}</span>';
 
             const items = keys.map((key, i) => {
-                const val       = data[key];
-                const isLast    = i === keys.length - 1;
+                const val = data[key];
+                const isLast = i === keys.length - 1;
                 const isComplex = val !== null && typeof val === 'object';
-                const comma     = isLast ? '' : '<span class="jv-comma">,</span>';
+                const comma = isLast ? '' : '<span class="jv-comma">,</span>';
 
                 if (isComplex) {
                     return `
@@ -287,7 +287,7 @@ $(document).ready(function () {
             return;
         }
 
-        const jsonString  = JSON.stringify(parsed, null, 2);
+        const jsonString = JSON.stringify(parsed, null, 2);
         const encodedJson = encodeURIComponent(jsonString);
 
         container.html(`
@@ -313,100 +313,83 @@ $(document).ready(function () {
             processing: false,
             serverSide: true,
             deferRender: true,
-            columnDefs: [
-                {targets: [0, 1, 2, 3, 4, 5, 6], orderable: false},
-            ],
+            columnDefs: [{targets: [0, 1, 2, 3, 4, 5, 6], orderable: false},],
             ajax: {
-                url: API_URL,
-                type: 'GET',
-                timeout: AJAX_TIMEOUT,
-                data: function (d) {
+                url: API_URL, type: 'GET', timeout: AJAX_TIMEOUT, data: function (d) {
                     const f = getFilters();
-                    d.page     = Math.floor(d.start / d.length) + 1;
+                    d.page = Math.floor(d.start / d.length) + 1;
                     d.per_page = d.length;
-                    d.search   = f.search;
-                    d.date     = f.date;
-                    d.type     = f.type;
-                    d.level    = f.level;
-                },
-                beforeSend: function () {
+                    d.search = f.search;
+                    d.date = f.date;
+                    d.type = f.type;
+                    d.level = f.level;
+                }, beforeSend: function () {
                     hideError();
                     showTableLoading();
-                },
-                dataSrc: function (json) {
+                }, dataSrc: function (json) {
                     hideTableLoading();
                     if (json && json.meta) {
-                        json.recordsTotal    = json.meta.total;
+                        json.recordsTotal = json.meta.total;
                         json.recordsFiltered = json.meta.total;
                     }
                     return json.data || [];
-                },
-                error: function (xhr, error, thrown) {
+                }, error: function (xhr, error, thrown) {
                     hideTableLoading();
                     let msg = 'خطای ناشناخته دریافت داده‌ها';
-                    if (error === 'timeout')                         msg = 'زمان انتظار به پایان رسید.';
-                    else if (xhr.status === 0)                       msg = 'اتصال به سرور برقرار نشد.';
-                    else if (xhr.status === 401 || xhr.status === 403) msg = 'دسترسی مجاز نیست (' + xhr.status + ').';
-                    else if (xhr.status === 500)                     msg = 'خطای داخلی سرور (500).';
-                    else if (thrown)                                 msg = thrown;
+                    if (error === 'timeout') msg = 'زمان انتظار به پایان رسید.'; else if (xhr.status === 0) msg = 'اتصال به سرور برقرار نشد.'; else if (xhr.status === 401 || xhr.status === 403) msg = 'دسترسی مجاز نیست (' + xhr.status + ').'; else if (xhr.status === 500) msg = 'خطای داخلی سرور (500).'; else if (thrown) msg = thrown;
                     showError(msg);
                 },
             },
-            columns: [
-                {
-                    data: null,
-                    render: function (data, type, row, meta) {
-                        return meta.settings._iDisplayStart + meta.row + 1;
+            columns: [{
+                data: null, render: function (data, type, row, meta) {
+                    return meta.settings._iDisplayStart + meta.row + 1;
+                }
+            }, {
+                data: 'created_at', render: function (data) {
+                    if (!data) return '-';
+                    try {
+                        return jdate(data).format('HH:mm:ss - Y/m/d');
+                    } catch (e) {
+                        return data;
                     }
-                },
-                {
-                    data: 'created_at',
-                    render: function (data) {
-                        if (!data) return '-';
-                        try { return jdate(data).format('HH:mm:ss - Y/m/d'); }
-                        catch (e) { return data; }
-                    }
-                },
-                {
-                    data: 'level',
-                    render: function (data) { return levelBadge(data || ''); }
-                },
-                {
-                    data: 'type',
-                    render: function (data) { return typeBadge(data || ''); }
-                },
-                {
-                    data: 'message',
-                    render: function (data) {
-                        return `<small>${escapeHtml(strLimit(data, MSG_LIMIT))}</small>`;
-                    }
-                },
-                {
-                    data: 'response_time',
-                    render: function (data) { return rtBadge(data); }
-                },
-                {
-                    data: null,
-                    render: function (data, type, row) {
-                        return `<button type="button"
+                }
+            }, {
+                data: 'level', render: function (data) {
+                    return levelBadge(data || '');
+                }
+            }, {
+                data: 'type', render: function (data) {
+                    return typeBadge(data || '');
+                }
+            }, {
+                data: 'message', render: function (data) {
+                    return `<small>${escapeHtml(strLimit(data, MSG_LIMIT))}</small>`;
+                }
+            }, {
+                data: 'response_time', render: function (data) {
+                    return rtBadge(data);
+                }
+            }, {
+                data: null, render: function (data, type, row) {
+                    return `<button type="button"
                             class="btn btn-info btn-sm show-input"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
                             data-id="${row.id}">
                             نمایش
                         </button>`;
-                    }
-                },
-            ],
+                }
+            },],
         });
     }
 
+    $.fn.dataTable.ext.errMode = 'none';
     initDatatable();
 
     // ─── Modal: نمایش جزئیات ──────────────────────────────────────────────────
     $(document).on('click', '.show-input', function () {
         const logId = $(this).data('id');
-        const url   = SHOW_BASE_URL.replace('{id}', logId);
+        const url = SHOW_BASE_URL.replace('{id}', logId);
 
         $('#modal-loading').show();
         $('#modal-content-wrapper').hide();
@@ -415,41 +398,33 @@ $(document).ready(function () {
         $('#home-tab').tab('show');
 
         $.ajax({
-            url: url,
-            type: 'GET',
-            timeout: AJAX_TIMEOUT,
-            success: function (response) {
+            url: url, type: 'GET', timeout: AJAX_TIMEOUT, success: function (response) {
                 const data = response.data ?? response;
 
                 renderJsonViewer('#json_detail', {
-                    id:            data.id,
-                    level:         data.level,
-                    type:          data.type,
-                    service:       data.service,
-                    uri:           data.uri,
-                    method:        data.method,
-                    status_code:   data.status_code,
+                    id: data.id,
+                    level: data.level,
+                    type: data.type,
+                    service: data.service,
+                    uri: data.uri,
+                    method: data.method,
+                    status_code: data.status_code,
                     response_time: data.response_time,
-                    user:          data.user,
-                    message:       data.message,
-                    created_at:    data.created_at,
+                    user: data.user,
+                    message: data.message,
+                    created_at: data.created_at,
                 });
 
-                renderJsonViewer('#json_input',     data.input);
-                renderJsonViewer('#json_output',    data.output);
-                renderJsonViewer('#json_context',   data.context);
+                renderJsonViewer('#json_input', data.input);
+                renderJsonViewer('#json_output', data.output);
+                renderJsonViewer('#json_context', data.context);
                 renderJsonViewer('#json_extradata', data.extra_data);
 
                 $('#modal-loading').hide();
                 $('#modal-content-wrapper').show();
-            },
-            error: function (xhr) {
+            }, error: function (xhr) {
                 $('#modal-loading').hide();
-                $('#modal-content-wrapper').html(
-                    '<div class="alert alert-danger m-3">خطا در دریافت اطلاعات: ' +
-                    escapeHtml(xhr.responseJSON?.message ?? 'خطای ناشناخته') +
-                    '</div>'
-                );
+                $('#modal-content-wrapper').html('<div class="alert alert-danger m-3">خطا در دریافت اطلاعات: ' + escapeHtml(xhr.responseJSON?.message ?? 'خطای ناشناخته') + '</div>');
                 $('#modal-content-wrapper').show();
             }
         });
@@ -461,7 +436,7 @@ $(document).ready(function () {
         clearTimeout(searchDebounce);
         searchDebounce = setTimeout(function () {
             if (table) table.ajax.reload(null, true);
-        }, 500); // 500ms صبر می‌کنه بعد از آخرین کاراکتر
+        }, 500);
     });
 
     $('#input-date, #input-type, #input-level').on('change', function () {
@@ -473,7 +448,7 @@ $(document).ready(function () {
         if (table) table.ajax.reload(null, true);
     });
 
-// ─── دکمه ریست ────────────────────────────────────────────────────────────────
+    // ─── دکمه ریست ────────────────────────────────────────────────────────────────
     $('#reset-btn').on('click', function () {
         $('#input-search').val('');
         $('#input-level').val('');
