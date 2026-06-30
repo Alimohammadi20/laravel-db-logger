@@ -4,47 +4,11 @@
     <link rel="stylesheet"
           href="{{asset('vendor/alimi7372/dblogger/libs/prettyPrint/dist/css/pretty-print-json.min.css')}}">
     <link rel="stylesheet" href="{{asset("vendor/alimi7372/dblogger/libs/flatpickr/flatpickr.css")}}"/>
-    <style>
-        #table-loading-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.75);
-            z-index: 10;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        #table-loading-overlay.active {
-            display: flex;
-        }
-
-        #table-wrapper {
-            position: relative;
-            min-height: 200px;
-        }
-
-        .loading-text {
-            font-size: 14px;
-            color: #555;
-            direction: rtl;
-        }
-
-        #api-error-banner {
-            display: none;
-        }
-    </style>
 @endpush
 @section('content')
     <div class="container-fluids mt-5 px-5">
         @include('dblogger::partials.filters')
         <hr>
-
         {{-- بنر خطا --}}
         <div id="api-error-banner" class="alert alert-danger alert-dismissible" role="alert">
             <strong>خطا در دریافت داده‌ها:</strong> <span id="api-error-msg"></span>

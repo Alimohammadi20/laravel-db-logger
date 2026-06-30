@@ -456,8 +456,38 @@ $(document).ready(function () {
     });
 
     // ─── فیلترها: reload جدول ─────────────────────────────────────────────────
-    $('#input-search, #input-date, #input-type, #input-level').on('change input', function () {
-        if (table) table.ajax.reload(null, false);
+    let searchDebounce = null;
+    $('#input-search').on('input', function () {
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(function () {
+            if (table) table.ajax.reload(null, true);
+        }, 500); // 500ms صبر می‌کنه بعد از آخرین کاراکتر
+    });
+
+    $('#input-date, #input-type, #input-level').on('change', function () {
+        if (table) table.ajax.reload(null, true);
+    });
+
+    // ─── دکمه فیلتر ───────────────────────────────────────────────────────────────
+    $('#submit-btn').on('click', function () {
+        if (table) table.ajax.reload(null, true);
+    });
+
+// ─── دکمه ریست ────────────────────────────────────────────────────────────────
+    $('#reset-btn').on('click', function () {
+        $('#input-search').val('');
+        $('#input-level').val('');
+        $('#input-type').val('');
+
+        // ریست flatpickr
+        const fp = document.querySelector('#input-date')?._flatpickr;
+        if (fp) {
+            fp.clear();
+        } else {
+            $('#input-date').val('');
+        }
+
+        if (table) table.ajax.reload(null, true);
     });
 
 });
