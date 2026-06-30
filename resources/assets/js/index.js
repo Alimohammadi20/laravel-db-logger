@@ -437,7 +437,7 @@ $(document).ready(function () {
         clearTimeout(searchDebounce);
         searchDebounce = setTimeout(function () {
             if (table) table.ajax.reload(null, true);
-        }, 500);
+        }, 1500);
     });
 
     $('#input-date, #input-type, #input-level').on('change', function () {
