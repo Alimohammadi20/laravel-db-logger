@@ -23,7 +23,7 @@ class IndexLogResource extends JsonResource
             'uri' => $this->uri,
             'method' => $this->method,
             'response_time' => $this->response_time,
-            'created_at' => jdate($this->created_at)->format('Y-m-d H:i'),
+            'created_at' => jdate($this->created_at)->format('Y-m-d H:i:s'),
         ];
     }
 }
