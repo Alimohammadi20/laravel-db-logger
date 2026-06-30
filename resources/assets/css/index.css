@@ -30,86 +30,122 @@ td, th {
 code, kbd, pre, samp {
     unicode-bidi: unset !important;
 }
-/* ─── JSON Viewer ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════
+   JSON Viewer  —  VS Code style
+   ═══════════════════════════════════════════════ */
+
 .json-viewer {
     font-family: 'Courier New', Courier, monospace;
     font-size: 13px;
-    line-height: 1.7;
+    line-height: 1.8;
     direction: ltr;
     text-align: left;
     padding: 12px 16px;
     background: #1e1e1e;
     color: #d4d4d4;
-    border-radius: 6px;
+    border-radius: 0 0 6px 6px;
     overflow-x: auto;
 }
 
-.jv-row {
-    display: flex;
-    align-items: baseline;
-    gap: 2px;
-    min-height: 22px;
+/* ── ساختار درختی ── */
+
+/* هر node (یه key:value یا یه آیتم آرایه) */
+.jv-node {
+    display: block;
+    white-space: nowrap;
 }
 
+/* فرزندان — با margin-left ایجاد indentation می‌کنیم */
 .jv-children {
-    border-left: 1px dashed #444;
-    margin-left: 8px;
+    display: block;
+    margin-left: 20px;
+    border-left: 1px dashed #3c3c3c;
+    padding-left: 8px;
 }
 
+/* ── Toggle Button ── */
 .jv-toggle {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
     cursor: pointer;
     user-select: none;
-    color: #888;
-    font-size: 11px;
-    width: 14px;
-    display: inline-block;
-    flex-shrink: 0;
+    color: #808080;
+    font-size: 10px;
+    border-radius: 2px;
+    margin-right: 2px;
+    vertical-align: middle;
     transition: color 0.15s;
 }
-.jv-toggle:hover { color: #fff; }
 
-.jv-toggle--leaf {
-    cursor: default;
-    color: transparent;
+.jv-toggle::before {
+    content: '▾';  /* باز = فلش پایین */
 }
 
-.jv-key     { color: #9cdcfe; }
-.jv-index   { color: #b5cea8; }
-.jv-str     { color: #ce9178; }
-.jv-num     { color: #b5cea8; }
-.jv-bool    { color: #569cd6; }
-.jv-null    { color: #808080; font-style: italic; }
-.jv-bracket { color: #ffd700; }
-.jv-colon   { color: #888; }
-.jv-comma   { color: #888; }
+.jv-toggle.jv-closed::before {
+    content: '▸';  /* بسته = فلش راست */
+}
 
+.jv-toggle:hover {
+    color: #d4d4d4;
+    background: #2a2a2a;
+}
+
+/* فضای خالی برای leaf node ها — تراز با toggle */
+.jv-toggle-placeholder {
+    display: inline-block;
+    width: 16px;
+    margin-right: 2px;
+}
+
+/* ── رنگ‌بندی داده‌ها ── */
+.jv-key     { color: #9cdcfe; }            /* آبی — کلید object */
+.jv-index   { color: #9cdcfe; }            /* آبی — ایندکس array */
+.jv-str     { color: #ce9178; }            /* نارنجی — string */
+.jv-num     { color: #b5cea8; }            /* سبز — number */
+.jv-bool    { color: #569cd6; }            /* آبی تیره — boolean */
+.jv-null    { color: #808080; font-style: italic; }
+.jv-bracket { color: #ffd700; }            /* طلایی — { } [ ] */
+.jv-colon   { color: #808080; margin: 0 2px; }
+.jv-comma   { color: #808080; }
+
+/* ── Toolbar بالای viewer ── */
 .jv-toolbar {
     display: flex;
     justify-content: flex-end;
-    padding: 6px 8px 4px;
+    align-items: center;
+    padding: 6px 10px;
     background: #252526;
     border-radius: 6px 6px 0 0;
     border-bottom: 1px solid #333;
 }
 
-.jv-toolbar + .json-viewer {
-    border-radius: 0 0 6px 6px;
-}
-
+/* ── دکمه کپی ── */
 .jv-copy-btn {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     padding: 3px 10px;
     font-size: 12px;
+    font-family: inherit;
     background: #2d2d2d;
     color: #ccc;
     border: 1px solid #444;
     border-radius: 4px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.jv-copy-btn:hover { background: #3a3a3a; color: #fff; }
-.jv-copy-btn--success { background: #1e4620; color: #4caf50; border-color: #4caf50; }
 
-.jv-item { margin: 1px 0; }
+.jv-copy-btn:hover {
+    background: #3a3a3a;
+    color: #fff;
+    border-color: #666;
+}
+
+.jv-copy-btn--success {
+    background: #1e4620;
+    color: #4caf50;
+    border-color: #4caf50;
+}

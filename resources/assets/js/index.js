@@ -36,13 +36,23 @@ const faLang = {
 
 // ─── توابعی که از onclick در HTML صدا زده می‌شن باید global باشن ──────────────
 
-function jvToggle(el) {
-    const children = el.parentElement.querySelector('.jv-children');
+window.jvToggle = function(btn) {
+    // ساختار: .jv-node > [toggle] [key/index] [colon] [bracket + children + bracket]
+    // children مستقیم زیر همون .jv-node
+    const node     = btn.closest('.jv-node');
+    const children = Array.from(node.childNodes).find(
+        n => n.nodeType === 1 && n.classList.contains('jv-children')
+    ) || node.querySelector(':scope > .jv-children');
+
     if (!children) return;
-    const collapsed = children.style.display === 'none';
-    children.style.display = collapsed ? '' : 'none';
-    el.textContent = collapsed ? '▾' : '▸';
-}
+
+    if (btn.classList.toggle('jv-open')) {
+        children.style.display = '';
+    } else {
+        children.style.display = 'none';
+    }
+};
+
 
 function jvCopy(btn, encodedJson) {
     const jsonString = decodeURIComponent(encodedJson);
@@ -199,58 +209,66 @@ $(document).ready(function () {
 
     function buildJsonViewer(data, depth) {
         depth = depth || 0;
-        const indent = depth * 16; // هر لول = 16px
 
-        if (data === null)      return '<span class="jv-null">null</span>';
-        if (data === undefined) return '<span class="jv-null">داده‌ای وجود ندارد</span>';
-        if (typeof data === 'boolean') return `<span class="jv-bool">${data}</span>`;
-        if (typeof data === 'number')  return `<span class="jv-num">${data}</span>`;
-        if (typeof data === 'string')  return `<span class="jv-str">"${escapeHtml(data)}"</span>`;
+        if (data === null)
+            return '<span class="jv-null">null</span>';
+        if (data === undefined)
+            return '<span class="jv-null">undefined</span>';
+        if (typeof data === 'boolean')
+            return `<span class="jv-bool">${data}</span>`;
+        if (typeof data === 'number')
+            return `<span class="jv-num">${data}</span>`;
+        if (typeof data === 'string')
+            return `<span class="jv-str">"${escapeHtml(data)}"</span>`;
 
         if (Array.isArray(data)) {
-            if (data.length === 0) return '<span class="jv-bracket">[]</span>';
+            if (data.length === 0)
+                return '<span class="jv-bracket">[</span><span class="jv-bracket">]</span>';
 
             const items = data.map((item, i) => {
-                const isLast = i === data.length - 1;
-                const isLeaf = item === null || typeof item !== 'object';
-                return `
-                <div class="jv-row" style="padding-left: ${indent + 16}px">
-                    ${isLeaf
-                    ? `<span class="jv-toggle jv-toggle--leaf">　</span>`
-                    : `<span class="jv-toggle" onclick="jvToggle(this)">▾</span>`
+                const isLast    = i === data.length - 1;
+                const isComplex = item !== null && typeof item === 'object';
+                const comma     = isLast ? '' : '<span class="jv-comma">,</span>';
+
+                if (isComplex) {
+                    return `
+                <div class="jv-node">
+                    <span class="jv-toggle jv-open" onclick="jvToggle(this)"></span><span class="jv-index">${i}</span><span class="jv-colon">: </span>${buildJsonViewer(item, depth + 1)}${comma}
+                </div>`;
                 }
-                    <span class="jv-index">${i}</span><span class="jv-colon">: </span>${buildJsonViewer(item, depth + 1)}${isLast ? '' : '<span class="jv-comma">,</span>'}
+                return `
+                <div class="jv-node jv-leaf">
+                    <span class="jv-toggle-placeholder"></span><span class="jv-index">${i}</span><span class="jv-colon">: </span>${buildJsonViewer(item, depth + 1)}${comma}
                 </div>`;
             }).join('');
 
-            return `
-            <span class="jv-bracket">[</span>
-            <div class="jv-children">${items}</div>
-            <div class="jv-closing" style="padding-left: ${indent}px"><span class="jv-bracket">]</span></div>`;
+            return `<span class="jv-bracket">[</span><div class="jv-children">${items}</div><span class="jv-bracket">]</span>`;
         }
 
         if (typeof data === 'object') {
             const keys = Object.keys(data);
-            if (keys.length === 0) return '<span class="jv-bracket">{}</span>';
+            if (keys.length === 0)
+                return '<span class="jv-bracket">{</span><span class="jv-bracket">}</span>';
 
             const items = keys.map((key, i) => {
-                const val    = data[key];
-                const isLast = i === keys.length - 1;
-                const isLeaf = val === null || typeof val !== 'object';
-                return `
-                <div class="jv-row" style="padding-left: ${indent + 16}px">
-                    ${isLeaf
-                    ? `<span class="jv-toggle jv-toggle--leaf">　</span>`
-                    : `<span class="jv-toggle" onclick="jvToggle(this)">▾</span>`
+                const val       = data[key];
+                const isLast    = i === keys.length - 1;
+                const isComplex = val !== null && typeof val === 'object';
+                const comma     = isLast ? '' : '<span class="jv-comma">,</span>';
+
+                if (isComplex) {
+                    return `
+                <div class="jv-node">
+                    <span class="jv-toggle jv-open" onclick="jvToggle(this)"></span><span class="jv-key">"${escapeHtml(key)}"</span><span class="jv-colon">: </span>${buildJsonViewer(val, depth + 1)}${comma}
+                </div>`;
                 }
-                    <span class="jv-key">"${escapeHtml(key)}"</span><span class="jv-colon">: </span>${buildJsonViewer(val, depth + 1)}${isLast ? '' : '<span class="jv-comma">,</span>'}
+                return `
+                <div class="jv-node jv-leaf">
+                    <span class="jv-toggle-placeholder"></span><span class="jv-key">"${escapeHtml(key)}"</span><span class="jv-colon">: </span>${buildJsonViewer(val, depth + 1)}${comma}
                 </div>`;
             }).join('');
 
-            return `
-            <span class="jv-bracket">{</span>
-            <div class="jv-children">${items}</div>
-            <div class="jv-closing" style="padding-left: ${indent}px"><span class="jv-bracket">}</span></div>`;
+            return `<span class="jv-bracket">{</span><div class="jv-children">${items}</div><span class="jv-bracket">}</span>`;
         }
 
         return escapeHtml(String(data));
