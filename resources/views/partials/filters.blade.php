@@ -24,15 +24,8 @@
         </select>
     </div>
     <div class="col-md-2">
-        <label class="form-label" for="input-type">services :</label>
-        <select type="text" name="type" class="form-control" id="input-type">
-            <option {{!request('type') ? 'selected' : ''}}></option>
-            @foreach(\Alimi7372\DBLogger\Enums\LogType::cases() as $type)
-                <option value="{{$type->name}}" {{request('type') == $type->name? 'selected' : ''}}>
-                    {{$type->value}}
-                </option>
-            @endforeach
-        </select>
+        <label class="form-label" for="input-search">context search:</label>
+        <input type="text" name="searchContext" id="input-searchContext" class="form-control" value="{{request('searchContext')}}">
     </div>
     <div class="col-2 text-start d-flex align-items-end justify-content-evenly">
         <button type="button" id="reset-btn" class="btn btn-danger ms-2">ریست</button>

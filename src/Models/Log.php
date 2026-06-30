@@ -31,10 +31,20 @@ class Log extends Model
             }
         }
         if ($request->search) {
-            $query->where(function (Builder $query) use ($request) {
-                return $query->orWhere('message', 'like', '%' . $request->search . '%')
-                    ->orWhere('user', 'like', '%' . $request->search . '%')
-                    ->orWhere('uri', 'like', '%' . $request->search . '%');
+            $search = '%' . $request->search . '%';
+            $query->where(function (Builder $query) use ($search) {
+                $query->where('message', 'LIKE', $search)
+                    ->orWhere('user', 'LIKE', $search)
+                    ->orWhere('uri', 'LIKE', $search);
+            });
+        }
+        if ($request->searchContext) {
+            $searchContext = '%' . $request->searchContext . '%';
+            $query->where(function (Builder $query) use ($searchContext) {
+                $query->whereHas('context', fn($q) => $q->where('data', 'LIKE', $searchContext))
+                    ->orWhereHas('input', fn($q) => $q->where('data', 'LIKE', $searchContext))
+                    ->orWhereHas('output', fn($q) => $q->where('data', 'LIKE', $searchContext))
+                    ->orWhereHas('extraData', fn($q) => $q->where('data', 'LIKE', $searchContext));
             });
         }
         if ($request->level) {
@@ -65,6 +75,7 @@ class Log extends Model
     {
         return $this->belongsTo(LogContext::class, 'extra_data_id', 'id');
     }
+
     protected static function boot()
     {
         parent::boot();

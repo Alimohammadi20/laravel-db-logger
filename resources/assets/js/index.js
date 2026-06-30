@@ -186,6 +186,7 @@ $(document).ready(function () {
     function getFilters() {
         return {
             search: $('#input-search').val() || '',
+            searchContext: $('#input-searchContext').val() || '',
             date: $('#input-date').val() || '',
             type: $('#input-type').val() || '',
             level: $('#input-level').val() || '',
@@ -313,6 +314,7 @@ $(document).ready(function () {
             processing: false,
             serverSide: true,
             deferRender: true,
+            responsive:true,
             columnDefs: [{targets: [0, 1, 2, 3, 4, 5, 6], orderable: false},],
             ajax: {
                 url: API_URL, type: 'GET', timeout: AJAX_TIMEOUT, data: function (d) {
@@ -407,7 +409,6 @@ $(document).ready(function () {
                     type: data.type,
                     service: data.service,
                     uri: data.uri,
-                    method: data.method,
                     status_code: data.status_code,
                     response_time: data.response_time,
                     user: data.user,
@@ -432,7 +433,7 @@ $(document).ready(function () {
 
     // ─── فیلترها: reload جدول ─────────────────────────────────────────────────
     let searchDebounce = null;
-    $('#input-search').on('input', function () {
+    $('#input-search,#input-searchContext').on('input', function () {
         clearTimeout(searchDebounce);
         searchDebounce = setTimeout(function () {
             if (table) table.ajax.reload(null, true);
@@ -451,6 +452,7 @@ $(document).ready(function () {
     // ─── دکمه ریست ────────────────────────────────────────────────────────────────
     $('#reset-btn').on('click', function () {
         $('#input-search').val('');
+        $('#input-searchContext').val('');
         $('#input-level').val('');
         $('#input-type').val('');
 
